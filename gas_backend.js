@@ -57,8 +57,7 @@ function doGet(e) {
       return ContentService.createTextOutput(JSON.stringify({
         status: 'error',
         message: 'ปฏิเสธการเชื่อมต่อ: ไม่มีสิทธิ์การเข้าถึงข้อมูลระบบ (Unauthorized Access)'
-      })).setMimeType(ContentService.MimeType.JSON)
-        .setHeader('Access-Control-Allow-Origin', '*');
+      })).setMimeType(ContentService.MimeType.JSON);
     }
     
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -79,14 +78,12 @@ function doGet(e) {
     };
     
     return ContentService.createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*');
+      .setMimeType(ContentService.MimeType.JSON);
   } catch (error) {
     return ContentService.createTextOutput(JSON.stringify({
       status: 'error',
       message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*');
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
