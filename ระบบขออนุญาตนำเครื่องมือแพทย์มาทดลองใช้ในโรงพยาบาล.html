@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้ในโรงพยาบาล</title>
+    
+    <!-- Google Fonts: Prompt for Modern UI, Sarabun for Official Document -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern Design System (Theme & Variables) */
+        :root {
+            --primary: #0f766e;        /* Dark Teal */
+            --primary-hover: #115e59;  /* Deep Teal */
+            --primary-light: #f0fdfa;  /* Light Teal Bg */
+            --secondary: #0284c7;      /* Sky Blue */
+            --text-main: #1f2937;      /* Dark Slate */
+            --text-muted: #4b5563;     /* Muted Gray */
+            --bg-body: #f8fafc;        /* Soft Cool Gray */
+            --bg-card: #ffffff;        /* Pure White */
+            --border-color: #e2e8f0;   /* Light Gray Border */
+            --success: #10b981;        /* Emerald Green */
+            --danger: #ef4444;         /* Red */
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Portal Header */
+        .portal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .portal-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+        }
+
+        .portal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .portal-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stepper Navigation */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            background: var(--bg-card);
+            padding: 24px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+            border: 1px solid var(--border-color);
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background-color: var(--border-color);
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            border: 3px solid var(--bg-card);
+        }
+
+        .step-label {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        /* Active/Completed Step Styles */
+        .step.active .step-number {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .step.completed::after {
+            background-color: var(--success);
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Form Sections */
+        .form-section {
+            display: none;
+            animation: slideIn 0.4s ease-out forwards;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 12px;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        /* Input Controls */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-group label span.required {
+            color: var(--danger);
+        }
+
+        .form-control {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            background-color: #fff;
+            color: var(--text-main);
+            transition: var(--transition);
+            outline: none;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Styled File Upload */
+        .upload-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .upload-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: var(--bg-body);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-color);
+            transition: var(--transition);
+        }
+
+        .upload-row:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .upload-label-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .upload-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .upload-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .upload-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .upload-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-upload {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-upload:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: white;
+        }
+
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-status {
+            font-size: 12px;
+            color: var(--success);
+            display: none;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        /* Disclaimer Callout Box */
+        .liability-box {
+            background: linear-gradient(135deg, #fef2f2, #fff1f2);
+            border-left: 4px solid var(--danger);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+        }
+
+        .liability-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .liability-text {
+            font-size: 14px;
+            color: #7f1d1d;
+            text-align: justify;
+        }
+
+        .agreement-checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .agreement-checkbox-wrapper:hover {
+            background-color: #fff5f5;
+        }
+
+        .agreement-checkbox-wrapper input {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--danger);
+        }
+
+        .agreement-checkbox-wrapper label {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Dynamic Item List styling (Device Items) */
+        .dynamic-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr auto;
+            gap: 12px;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-remove {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+
+        .btn-remove:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-add {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            font-weight: 500;
+            font-size: 14px;
+            padding: 12px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-add:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Signature Canvas Pad */
+        .signature-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .canvas-container {
+            position: relative;
+            background-color: white;
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            height: 200px;
+            touch-action: none; /* Prevents scrolling when drawing on touch screens */
+        }
+
+        .canvas-container canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .canvas-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-clear {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-clear:hover {
+            background-color: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        /* Form Actions & Navigation Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .btn {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none !important;
+        }
+
+        /* Success modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transform: scale(0.9);
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #d1fae5;
+            color: var(--success);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Hidden Printable Document */
+        #print-document {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .stepper {
+                padding: 16px 20px;
+            }
+
+            .step-label {
+                font-size: 11px;
+            }
+
+            .form-card {
+                padding: 24px 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                border: 1px solid var(--border-color);
+                padding: 12px;
+                border-radius: var(--radius-md);
+                position: relative;
+            }
+
+            .btn-remove {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 32px;
+                height: 32px;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ==========================================
+           PRINT STYLESHEET (High fidelity with PNG)
+           ========================================== */
+        @media print {
+            /* Hide the web portal completely */
+            body > *:not(#print-document) {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                margin: 0;
+                font-family: 'Sarabun', sans-serif;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            #print-document {
+                display: block !important;
+                width: 100%;
+                padding: 10px;
+            }
+
+            /* Document Layout matching the PNG */
+            .doc-header-description {
+                font-size: 12.5px;
+                text-align: justify;
+                margin-bottom: 12px;
+                line-height: 1.45;
+                font-weight: normal;
+            }
+
+            .doc-title-bar {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border: 1px solid #000;
+                padding: 8px;
+                font-size: 14px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .doc-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 0px;
+            }
+
+            .doc-table td {
+                border: 1px solid #000;
+                padding: 6px 10px;
+                vertical-align: top;
+            }
+
+            .doc-section-title {
+                font-weight: bold;
+                background-color: #f8fafc;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-bottom: 1px solid #000;
+                padding: 4px 0;
+            }
+
+            .doc-field-line {
+                margin-bottom: 5px;
+                line-height: 1.5;
+            }
+
+            .doc-dots {
+                border-bottom: 1px dotted #333;
+                display: inline-block;
+                padding-left: 5px;
+                color: #0f172a;
+                font-weight: 500;
+            }
+
+            /* Specific layouts */
+            .flex-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .flex-item {
+                display: flex;
+                align-items: baseline;
+            }
+
+            /* Agreement / Liability text in print */
+            .doc-liability-statement {
+                border: 1px solid #000;
+                border-top: none;
+                padding: 8px;
+                font-size: 12px;
+                text-align: justify;
+                line-height: 1.4;
+            }
+
+            /* Signature area */
+            .doc-signature-table {
+                width: 100%;
+                border-collapse: collapse;
+                border-left: 1px solid #000;
+                border-right: 1px solid #000;
+                border-bottom: 1px solid #000;
+            }
+
+            .doc-signature-table td {
+                border: none;
+                padding: 10px;
+                width: 50%;
+            }
+
+            .doc-sig-right {
+                border-left: 1px solid #000 !important;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 120px;
+            }
+
+            .printed-signature {
+                max-height: 50px;
+                max-width: 150px;
+                object-fit: contain;
+                margin-bottom: 4px;
+            }
+
+            /* Bottom layout with two columns */
+            .doc-bottom-layout {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 0px;
+            }
+
+            .doc-bottom-layout td {
+                border: 1px solid #000;
+                width: 50%;
+                padding: 10px;
+                vertical-align: top;
+            }
+
+            .checkbox-list {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .checkbox-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+            }
+
+            .print-checkbox {
+                width: 12px;
+                height: 12px;
+                border: 1px solid #000;
+                display: inline-block;
+                position: relative;
+            }
+
+            .print-checkbox.checked::after {
+                content: '✓';
+                position: absolute;
+                top: -4px;
+                left: 1px;
+                font-size: 10px;
+                font-weight: bold;
+            }
+
+            .doc-hospital-section {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                font-size: 12px;
+            }
+
+            .hospital-title {
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+            .hospital-sig-line {
+                margin-top: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Portal Header -->
+        <header class="portal-header">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <a href="./index.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid var(--border-color); background: white; color: var(--text-main); font-weight: 500; box-shadow: var(--shadow-sm); cursor: pointer;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    กลับหน้าพอร์ทัลหลัก
+                </a>
+            </div>
+            <div class="portal-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                    <path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z"/>
+                </svg>
+            </div>
+            <h1 class="portal-title">แบบฟอร์มขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้ในโรงพยาบาล</h1>
+            <p class="portal-subtitle">สำหรับบริษัท/ห้างร้าน กรอกรายละเอียดข้อมูลเครื่องมือแพทย์ที่ต้องการยื่นเรื่องเพื่อเข้าทดลองใช้งาน และพิมพ์ใบคำขอเพื่อลงนามจริง</p>
+        </header>
+
+        <!-- Process Notice Banner -->
+        <div class="process-banner" style="background-color: #eff6ff; border-left: 4px solid var(--secondary); padding: 16px 20px; border-radius: var(--radius-md); margin-bottom: 30px; font-size: 14px; color: #1e3a8a; display: flex; align-items: flex-start; gap: 12px; box-shadow: var(--shadow-sm);">
+            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: #1e40af; flex-shrink: 0; margin-top: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <div>
+                <strong>ขั้นตอนปัจจุบัน (ขั้นตอนที่ 1):</strong> แบบฟอร์มนี้เป็น **"ฟอร์มขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้ในโรงพยาบาล"** เท่านั้น เมื่อเสร็จสิ้นระยะเวลาการทดลองใช้งานเครื่องมือแล้ว ท่านยังต้องกรอก **"แบบประเมินการทดลองใช้งานเครื่องมือแพทย์"** ในขั้นตอนถัดไปเพื่อเสร็จสิ้นกระบวนการประเมินการจัดหา
+            </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper">
+            <div class="step active" id="step1-indicator">
+                <div class="step-number">1</div>
+                <div class="step-label">ข้อมูลผู้ติดต่อ</div>
+            </div>
+            <div class="step" id="step2-indicator">
+                <div class="step-number">2</div>
+                <div class="step-label">ข้อมูลเครื่องมือแพทย์</div>
+            </div>
+            <div class="step" id="step3-indicator">
+                <div class="step-number">3</div>
+                <div class="step-label">ข้อมูลการทดลองใช้</div>
+            </div>
+            <div class="step" id="step4-indicator">
+                <div class="step-number">4</div>
+                <div class="step-label">เอกสาร & ลงนาม</div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="medicalForm">
+                
+                <!-- STEP 1: ข้อมูลผู้ติดต่อ -->
+                <div class="form-section active" id="step1">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        1. ข้อมูลผู้ติดต่อ (Contact Information)
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="companyName">ชื่อบริษัท/ห้างร้าน <span class="required">*</span></label>
+                            <input type="text" id="companyName" class="form-control" placeholder="ระบุชื่อจดทะเบียนของบริษัท หรือห้างร้าน" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="companyAddress">ที่อยู่ <span class="required">*</span></label>
+                            <textarea id="companyAddress" class="form-control" placeholder="ระบุที่ตั้งสำนักงานใหญ่ หรือที่อยู่ที่ใช้ติดต่อ" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="repName">ชื่อผู้แทนจำหน่าย <span class="required">*</span></label>
+                            <input type="text" id="repName" class="form-control" placeholder="ชื่อ-นามสกุล ของตัวแทนผู้ประสานงาน" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="repPhone">โทรศัพท์ <span class="required">*</span></label>
+                            <input type="tel" id="repPhone" class="form-control" placeholder="หมายเลขโทรศัพท์ติดต่อ" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: ข้อมูลเครื่องมือแพทย์ -->
+                <div class="form-section" id="step2">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                        2. ข้อมูลเครื่องมือ/วัสดุ (Device/Material Information)
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="deviceName">ชื่อเครื่องมือแพทย์ <span class="required">*</span></label>
+                            <input type="text" id="deviceName" class="form-control" placeholder="ระบุชื่อเครื่องมือแพทย์ (ภาษาไทยและอังกฤษ)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceBrand">ยี่ห้อ <span class="required">*</span></label>
+                            <input type="text" id="deviceBrand" class="form-control" placeholder="ยี่ห้อผู้ผลิต (Brand)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceModel">รุ่น <span class="required">*</span></label>
+                            <input type="text" id="deviceModel" class="form-control" placeholder="รุ่น (Model)" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="deviceCountry">ผลิตจากประเทศ <span class="required">*</span></label>
+                            <input type="text" id="deviceCountry" class="form-control" placeholder="ระบุประเทศผู้ผลิตต้นทาง" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="deviceSpecs">คุณสมบัติ/จุดเด่นของเครื่องมือโดยย่อ <span class="required">*</span></label>
+                            <textarea id="deviceSpecs" class="form-control" placeholder="สรุปคุณลักษณะเฉพาะ และจุดเด่นการใช้งาน" required></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="devicePurpose">วัตถุประสงค์ในการนำเครื่องมือดังกล่าวมาทดลองใช้งาน <span class="required">*</span></label>
+                            <textarea id="devicePurpose" class="form-control" placeholder="ระบุเหตุผลและเป้าหมายที่ต้องการส่งเครื่องมือมาทดลองใช้" required></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="refHospital">โรงพยาบาลอ้างอิง ที่มีการใช้งานปัจจุบัน</label>
+                            <input type="text" id="refHospital" class="form-control" placeholder="ระบุรายชื่อโรงพยาบาลอื่นๆ ที่ใช้งานอยู่ในขณะนี้ (ถ้ามี)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: ข้อมูลการทดลองใช้ -->
+                <div class="form-section" id="step3">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        3. ข้อมูลการทดลองใช้ (Testing Details)
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="userDepartment">หน่วยงานผู้ใช้ <span class="required">*</span></label>
+                            <input type="text" id="userDepartment" class="form-control" placeholder="ระบุแผนก/หอผู้ป่วยที่ต้องการนำเครื่องมือไปทดลอง" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffInCharge">แพทย์/พยาบาล/เจ้าหน้าที่ผู้ติดต่อ <span class="required">*</span></label>
+                            <input type="text" id="staffInCharge" class="form-control" placeholder="ระบุชื่อเจ้าหน้าที่ฝั่งโรงพยาบาลที่เป็นผู้ติดต่อประสานงาน" required>
+                        </div>
+                        
+                        <!-- Dynamic Items List -->
+                        <div class="form-group full-width">
+                            <label>รายการเครื่องมือ/วัสดุที่นำมาทดลองใช้ (พร้อมจำนวน) <span class="required">*</span></label>
+                            <div class="dynamic-items-container" id="itemsContainer">
+                                <div class="item-row">
+                                    <input type="text" class="form-control item-name" placeholder="ชื่อเครื่องมือ / ชิ้นส่วน / อุปกรณ์เสริม" required>
+                                    <input type="number" class="form-control item-qty" placeholder="จำนวน" min="1" value="1" required>
+                                    <button type="button" class="btn-icon btn-remove" onclick="removeItemRow(this)">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add" id="addItemBtn">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                เพิ่มรายการเครื่องมือ/อุปกรณ์เสริม
+                            </button>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="form-group">
+                            <label for="testDuration">ระยะเวลาการทดลองใช้ (วัน) <span class="required">*</span></label>
+                            <input type="number" id="testDuration" class="form-control" placeholder="ระบุจำนวนวัน" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <!-- Empty spacer for layout grid -->
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="testStart">ตั้งแต่วันที่ <span class="required">*</span></label>
+                            <input type="date" id="testStart" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="testEnd">ถึงวันที่ <span class="required">*</span></label>
+                            <input type="date" id="testEnd" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: เอกสารแนบ & ลงนาม -->
+                <div class="form-section" id="step4">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        4. เอกสารประกอบ & ลงชื่อรับผิดชอบ (Documents & Signature)
+                    </h2>
+
+                    <!-- Documents Checklist -->
+                    <label style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 10px; display: block;">
+                        เอกสารประกอบการพิจารณา (อัปโหลดและทำเครื่องหมายเลือก)
+                    </label>
+                    
+                    <div class="upload-container">
+                        <!-- Checklist Item 1 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc1" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">เอกสารขออนุญาตจากบริษัท (PDF)</span>
+                                    <span class="upload-subtitle" id="file1-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" accept=".pdf" onchange="handleFileChange(this, 'doc1', 'file1-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 2 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc2" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">ใบรับรองผลิตหรือนำเข้าเครื่องมือแพทย์</span>
+                                    <span class="upload-subtitle" id="file2-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc2', 'file2-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 3 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc3" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">ใบอนุญาตขายเครื่องมือแพทย์</span>
+                                    <span class="upload-subtitle" id="file3-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc3', 'file3-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 4 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc4" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">ใบรับรองผลิตภัณฑ์</span>
+                                    <span class="upload-subtitle" id="file4-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc4', 'file4-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 5 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc5" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">คุณลักษณะเฉพาะ (Specification)</span>
+                                    <span class="upload-subtitle" id="file5-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc5', 'file5-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 6 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc6" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">แผ่นพับ/โบรชัวร์/เอกสารแนะนำเครื่องมือ</span>
+                                    <span class="upload-subtitle" id="file6-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc6', 'file6-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 7 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc7" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">คู่มือ/เอกสารแนะนำการใช้งาน</span>
+                                    <span class="upload-subtitle" id="file7-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc7', 'file7-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 8 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper">
+                                <input type="checkbox" id="doc8" class="upload-checkbox">
+                                <div class="upload-info">
+                                    <span class="upload-title">ใบเสนอราคา (ถ้ามี)</span>
+                                    <span class="upload-subtitle" id="file8-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                </div>
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc8', 'file8-name')">
+                            </div>
+                        </div>
+
+                        <!-- Checklist Item 9 -->
+                        <div class="upload-row">
+                            <div class="upload-label-wrapper flex-column" style="flex: 1; align-items: stretch; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <input type="checkbox" id="doc9" class="upload-checkbox">
+                                    <div class="upload-info">
+                                        <span class="upload-title">อื่นๆ (โปรดระบุรายละเอียด)</span>
+                                        <span class="upload-subtitle" id="file9-name">ยังไม่ได้อัปโหลดไฟล์</span>
+                                    </div>
+                                </div>
+                                <input type="text" id="docOtherText" class="form-control" placeholder="ระบุชื่อเอกสารอื่นๆ" style="margin-top: 4px; display: none;">
+                            </div>
+                            <div class="file-input-wrapper" style="align-self: flex-start; margin-top: 4px;">
+                                <button type="button" class="btn-upload">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                    เลือกไฟล์
+                                </button>
+                                <input type="file" class="file-input" onchange="handleFileChange(this, 'doc9', 'file9-name')">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px;"></div>
+
+                    <!-- Liability warning -->
+                    <div class="liability-box">
+                        <div class="liability-title">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            ข้อตกลงและเงื่อนไขความรับผิดชอบ
+                        </div>
+                        <p class="liability-text">
+                            หากเครื่องมือ/วัสดุ ที่นำมาทดลองใช้ในโรงพยาบาล ก่อให้เกิดความเสียหายต่อผู้ป่วย ผู้ใช้ และโรงพยาบาลหรืออย่างใดอย่างหนึ่ง บริษัท/ห้างร้าน ที่นำเครื่องมือ/วัสดุ เข้ามาทดลองใช้จะต้องเป็นผู้รับผิดชอบค่าเสียหายทั้งหมดที่เกิดขึ้นทุกกรณี
+                        </p>
+                        <div class="agreement-checkbox-wrapper">
+                            <input type="checkbox" id="liabilityAgree" required>
+                            <label for="liabilityAgree">ข้าพเจ้าเข้าใจและขอยอมรับเงื่อนไขความรับผิดชอบข้างต้นทุกประการ</label>
+                        </div>
+                    </div>
+
+                    <!-- Signature Info Area -->
+                    <div class="signature-area" style="margin-top: 30px;">
+                        <label style="font-size: 14.5px; font-weight: 600; color: var(--text-main); text-align: center; margin-bottom: 5px;">
+                            ข้อมูลผู้มีอำนาจลงนาม / ผู้ประสานงาน (ลงชื่อจริงในเอกสารหลังจากพิมพ์)
+                        </label>
+                        
+                        <div class="form-grid" style="width: 100%; max-width: 500px; margin-top: 15px;">
+                            <div class="form-group full-width">
+                                <label for="sigPrintName">ชื่อ-สกุล ตัวบรรจง <span class="required">*</span></label>
+                                <input type="text" id="sigPrintName" class="form-control" placeholder="พิมพ์ชื่อ-นามสกุลจริง" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="sigPosition">ตำแหน่ง <span class="required">*</span></label>
+                                <input type="text" id="sigPosition" class="form-control" placeholder="ระบุตำแหน่งในบริษัท/ห้างร้าน" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" disabled>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                        ย้อนกลับ
+                    </button>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-secondary" id="previewBtn" style="display: none;">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                            พิมพ์ / บันทึก PDF
+                        </button>
+                        
+                        <button type="button" class="btn btn-primary" id="nextBtn">
+                            ถัดไป
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                        </button>
+                        
+                        <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                            ส่งคำขออนุมัติ
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-card">
+            <div class="modal-icon">✓</div>
+            <h3 class="modal-title">ส่งแบบฟอร์มสำเร็จ!</h3>
+            <p class="modal-desc">
+                ระบบได้บันทึกข้อมูลการขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้เรียบร้อยแล้ว ท่านสามารถดาวน์โหลดเอกสาร PDF เพื่อเก็บเป็นหลักฐานได้
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeSuccessModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                    พิมพ์ / บันทึก PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         PRINT DOCUMENT (Hidden on screen, shown when printing)
+         ======================================================= -->
+    <div id="print-document">
+        
+        <!-- Header Text -->
+        <p class="doc-header-description">
+            ศูนย์เครื่องมือควรมีการจัดทำแนวทางการนำเครื่องมือแพทย์ที่มาจากแหล่งอื่น เช่น เครื่องผู้ป่วย เครื่องบริจาค 
+            เครื่องบริษัทวางแบบมีเงื่อนไข / เครื่องแถม / เครื่องให้ใช้ฟรี ในกรณีที่เป็นเครื่องทดลองใช้ ให้ทางบริษัทติดต่อศูนย์
+            เครื่องมือแพทย์เพื่อขออนุญาตก่อน โดยใช้แบบฟอร์มขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้ในโรงพยาบาล 
+            และหลังจากทดลองใช้งานเสร็จแล้ว ให้หน่วยงานผู้ใช้งานประเมินการทดลองใช้งาน โดยใช้แบบประเมินการ
+            ทดลองใช้งานเครื่องมือแพทย์
+        </p>
+
+        <!-- Document Title Bar -->
+        <div class="doc-title-bar">
+            <span>แบบฟอร์มขออนุญาตนำเครื่องมือแพทย์มาทดลองใช้ในโรงพยาบาล</span>
+        </div>
+
+        <table class="doc-table">
+            <!-- 1. ข้อมูลผู้ติดต่อ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลผู้ติดต่อ</div>
+                    <div class="doc-field-line">
+                        ชื่อบริษัท/ห้างร้าน: <span class="doc-dots" id="print-companyName" style="width: 80%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ที่อยู่: <span class="doc-dots" id="print-companyAddress" style="width: 90%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ชื่อผู้แทนจำหน่าย: <span class="doc-dots" id="print-repName" style="width: 45%;"></span> 
+                        โทรศัพท์: <span class="doc-dots" id="print-repPhone" style="width: 35%;"></span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 2. ข้อมูลเครื่องมือ/วัสดุ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลเครื่องมือ/วัสดุ</div>
+                    <div class="doc-field-line">
+                        ชื่อเครื่องมือ: <span class="doc-dots" id="print-deviceName" style="width: 85%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ยี่ห้อ: <span class="doc-dots" id="print-deviceBrand" style="width: 25%;"></span> 
+                        รุ่น: <span class="doc-dots" id="print-deviceModel" style="width: 25%;"></span> 
+                        ผลิตภัณฑ์ประเทศ: <span class="doc-dots" id="print-deviceCountry" style="width: 28%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        คุณสมบัติ/จุดเด่นของเครื่องมือโดยย่อ: <span class="doc-dots" id="print-deviceSpecs" style="width: 72%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        วัตถุประสงค์ในการนำเครื่องมือดังกล่าวมาทดลองใช้งาน: <span class="doc-dots" id="print-devicePurpose" style="width: 65%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        โรงพยาบาลอ้างอิง ที่มีการใช้งานปัจจุบัน: <span class="doc-dots" id="print-refHospital" style="width: 72%;"></span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 3. ข้อมูลการทดลองใช้ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลการทดลองใช้</div>
+                    <div class="doc-field-line">
+                        หน่วยงานผู้ใช้: <span class="doc-dots" id="print-userDepartment" style="width: 85%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        แพทย์/พยาบาล/เจ้าหน้าที่: <span class="doc-dots" id="print-staffInCharge" style="width: 78%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        รายการเครื่องมือ/วัสดุ ที่นำมาทดลองใช้ประกอบด้วย ระบุจำนวน: 
+                        <span class="doc-dots" id="print-itemsList" style="width: 95%; display: block; min-height: 22px; padding-top: 4px;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ระยะเวลาการทดลองใช้: <span class="doc-dots" id="print-testDuration" style="width: 10%;"></span> วัน 
+                        ตั้งแต่วันที่: <span class="doc-dots" id="print-testStart" style="width: 28%;"></span> 
+                        ถึงวันที่: <span class="doc-dots" id="print-testEnd" style="width: 28%;"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Agreement / Liability Warning Statement -->
+        <div class="doc-liability-statement">
+            หากเครื่องมือ/วัสดุ ที่นำมาทดลองใช้ในโรงพยาบาล ก่อให้เกิดความเสียหายต่อผู้ป่วย ผู้ใช้ และโรงพยาบาลหรืออย่างใดอย่างหนึ่ง บริษัท/ห้างร้าน ที่นำเครื่องมือ/วัสดุ เข้ามาทดลองใช้จะต้องเป็นผู้รับผิดชอบค่าเสียหายทั้งหมดที่เกิดขึ้นทุกกรณี
+        </div>
+
+        <!-- Signature Section -->
+        <table class="doc-signature-table">
+            <tr>
+                <td style="width: 50%;"></td>
+                <td class="doc-sig-right" style="width: 50%;">
+                    <div style="width: 200px; text-align: left; margin: 0 auto;">
+                        <div style="min-height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                            <!-- Hand written signature line -->
+                        </div>
+                        ลงชื่อ <span style="float: right;">...................................................</span>
+                        <div style="margin-top: 5px;">ชื่อ-สกุล ตัวบรรจง <span class="doc-dots" id="print-sigPrintName" style="width: 100px;"></span></div>
+                        <div style="margin-top: 5px;">ตำแหน่ง <span class="doc-dots" id="print-sigPosition" style="width: 130px;"></span></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Bottom Layout: Left: Docs Checklist, Right: Hospital Section -->
+        <table class="doc-bottom-layout">
+            <tr>
+                <!-- Left: Checklist -->
+                <td>
+                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px;">เอกสารประกอบการพิจารณา</div>
+                    <div class="checkbox-list">
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-1"></span> เอกสารขออนุญาตจากบริษัท (PDF)
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-2"></span> ใบรับรองผลิตหรือนำเข้าเครื่องมือแพทย์
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-3"></span> ใบอนุญาตขายเครื่องมือแพทย์
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-4"></span> ใบรับรองผลิตภัณฑ์
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-5"></span> คุณลักษณะเฉพาะ
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-6"></span> แผ่นพับ/โปรชัวร์/เอกสารแนะนำเครื่องมือ
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-7"></span> คู่มือ/เอกสารแนะนำการใช้งาน
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-8"></span> ใบเสนอราคา ถ้ามี
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox" id="print-checkbox-9"></span> อื่นๆ <span class="doc-dots" id="print-docOtherText-val" style="width: 130px;"></span>
+                        </div>
+                    </div>
+                </td>
+
+                <!-- Right: Hospital Section -->
+                <td>
+                    <div class="doc-hospital-section">
+                        <div class="hospital-title">ส่วนของโรงพยาบาล</div>
+                        <div style="margin-bottom: 5px;">เรียน ผู้อำนวยการเพื่อโปรดพิจารณา</div>
+                        <div style="font-weight: bold; margin-top: 5px;">คำสั่ง</div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox"></span> อนุมัติให้หน่วยงานทดลองใช้
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox"></span> เสนอคณะกรรมการเครื่องมือแพทย์พิจารณา
+                        </div>
+                        <div class="checkbox-item">
+                            <span class="print-checkbox"></span> อื่นๆ.......................................................................................
+                        </div>
+                        
+                        <div class="hospital-sig-line">
+                            ลงชื่อ...............................................................................<br>
+                            ผู้อำนวยการโรงพยาบาล
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- Script logic for stepper, canvas drawing signature and file handling -->
+    <script>
+        // Configurable backend URL
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8a9yS_EfM47G_vmVn-KHuvlpmyUkVGeNp3COyjg1S3kcCbR_X_4BmPyZdYBxodwBt/exec";
+
+        // Form wizard / steps
+        let currentStep = 1;
+        const totalSteps = 4;
+        
+        const steps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3'),
+            document.getElementById('step4')
+        ];
+        
+        const indicators = [
+            document.getElementById('step1-indicator'),
+            document.getElementById('step2-indicator'),
+            document.getElementById('step3-indicator'),
+            document.getElementById('step4-indicator')
+        ];
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const previewBtn = document.getElementById('previewBtn');
+
+        // Initial setup for dates (set default testing dates logically)
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const startStr = today.toISOString().split('T')[0];
+            
+            // set min starting date to today
+            const startInput = document.getElementById('testStart');
+            const endInput = document.getElementById('testEnd');
+            
+            startInput.min = startStr;
+            startInput.value = startStr;
+            
+            // set default end to +30 days
+            const thirtyDaysLater = new Date(today);
+            thirtyDaysLater.setDate(today.getDate() + 30);
+            const endStr = thirtyDaysLater.toISOString().split('T')[0];
+            endInput.min = startStr;
+            endInput.value = endStr;
+            
+            document.getElementById('testDuration').value = 30;
+
+            // Date sync
+            startInput.addEventListener('change', () => {
+                endInput.min = startInput.value;
+                if (endInput.value < startInput.value) {
+                    endInput.value = startInput.value;
+                }
+                calculateDuration();
+            });
+
+            endInput.addEventListener('change', () => {
+                calculateDuration();
+            });
+
+            document.getElementById('testDuration').addEventListener('input', () => {
+                calculateEndDate();
+            });
+
+            // Toggle show/hide "Other document text"
+            const doc9Check = document.getElementById('doc9');
+            const docOtherText = document.getElementById('docOtherText');
+            doc9Check.addEventListener('change', () => {
+                if (doc9Check.checked) {
+                    docOtherText.style.display = 'block';
+                    docOtherText.required = true;
+                } else {
+                    docOtherText.style.display = 'none';
+                    docOtherText.required = false;
+                }
+            });
+        });
+
+        function calculateDuration() {
+            const startVal = new Date(document.getElementById('testStart').value);
+            const endVal = new Date(document.getElementById('testEnd').value);
+            if (startVal && endVal && endVal >= startVal) {
+                const diffTime = Math.abs(endVal - startVal);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+                document.getElementById('testDuration').value = diffDays;
+            }
+        }
+
+        function calculateEndDate() {
+            const startVal = new Date(document.getElementById('testStart').value);
+            const days = parseInt(document.getElementById('testDuration').value);
+            if (startVal && !isNaN(days) && days > 0) {
+                const endVal = new Date(startVal);
+                endVal.setDate(startVal.getDate() + days - 1); // inclusive
+                document.getElementById('testEnd').value = endVal.toISOString().split('T')[0];
+            }
+        }
+
+        // Stepper functionality
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                updateStepUI();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentStep--;
+            updateStepUI();
+        });
+
+        function updateStepUI() {
+            // Update active section
+            steps.forEach((step, idx) => {
+                if (idx + 1 === currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+
+            // Update indicators
+            indicators.forEach((indicator, idx) => {
+                if (idx + 1 < currentStep) {
+                    indicator.classList.remove('active');
+                    indicator.classList.add('completed');
+                } else if (idx + 1 === currentStep) {
+                    indicator.classList.add('active');
+                    indicator.classList.remove('completed');
+                } else {
+                    indicator.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update navigation button states
+            if (currentStep === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+                previewBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
+                previewBtn.style.display = 'none';
+            }
+
+            // Scroll container top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateStep(step) {
+            // Find all input elements in current step
+            const currentSection = steps[step - 1];
+            const requiredFields = currentSection.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                // Ignore dynamic items elements since we validate them specifically
+                if (field.classList.contains('item-name') || field.classList.contains('item-qty')) {
+                    if (field.value.trim() === '') {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                    return;
+                }
+
+                if (!field.checkValidity()) {
+                    isValid = false;
+                    field.reportValidity();
+                }
+            });
+
+            // Custom validations for dynamic items (Step 3)
+            if (step === 3) {
+                const names = document.querySelectorAll('.item-name');
+                const qtys = document.querySelectorAll('.item-qty');
+                if (names.length === 0) {
+                    alert('กรุณาเพิ่มรายการเครื่องมืออย่างน้อย 1 รายการ');
+                    isValid = false;
+                }
+                names.forEach((name, idx) => {
+                    if (name.value.trim() === '') {
+                        name.focus();
+                        isValid = false;
+                    }
+                });
+            }
+
+            // Custom validations for Step 4
+            if (step === 4) {
+                const agreeCheck = document.getElementById('liabilityAgree');
+                if (!agreeCheck.checked) {
+                    agreeCheck.reportValidity();
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        // File upload UI helper
+        function handleFileChange(input, checkboxId, labelId) {
+            const checkbox = document.getElementById(checkboxId);
+            const label = document.getElementById(labelId);
+            
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                label.innerText = `✓ ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                label.style.color = 'var(--success)';
+                checkbox.checked = true; // Auto check checkbox
+            } else {
+                label.innerText = 'ยังไม่ได้อัปโหลดไฟล์';
+                label.style.color = 'var(--text-muted)';
+                checkbox.checked = false;
+            }
+        }
+
+        // Dynamic item row management
+        const itemsContainer = document.getElementById('itemsContainer');
+        const addItemBtn = document.getElementById('addItemBtn');
+
+        addItemBtn.addEventListener('click', () => {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-row';
+            itemRow.innerHTML = `
+                <input type="text" class="form-control item-name" placeholder="ชื่อเครื่องมือ / ชิ้นส่วน / อุปกรณ์เสริม" required>
+                <input type="number" class="form-control item-qty" placeholder="จำนวน" min="1" value="1" required>
+                <button type="button" class="btn-icon btn-remove" onclick="removeItemRow(this)">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </button>
+            `;
+            itemsContainer.appendChild(itemRow);
+        });
+
+        function removeItemRow(btn) {
+            const rows = itemsContainer.querySelectorAll('.item-row');
+            if (rows.length > 1) {
+                btn.closest('.item-row').remove();
+            } else {
+                alert('ต้องมีรายการเครื่องมือ/อุปกรณ์อย่างน้อย 1 รายการ');
+            }
+        }
+
+        // Form Submit Handler
+        const form = document.getElementById('medicalForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateStep(currentStep)) return;
+            
+            // Prepare print replica
+            preparePrintDocument();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25"></circle>
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"></path>
+                    </svg>
+                    กำลังส่งข้อมูลหลังบ้าน...
+                `;
+                
+                // Add keyframes inline style if it doesn't exist
+                if (!document.getElementById('spin-keyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'spin-keyframes';
+                    style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+                    document.head.appendChild(style);
+                }
+
+                // Gather simple text inputs
+                const payload = {
+                    formType: 'request',
+                    submissionId: 'REQ-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    companyName: document.getElementById('companyName').value,
+                    companyAddress: document.getElementById('companyAddress').value,
+                    repName: document.getElementById('repName').value,
+                    repPhone: document.getElementById('repPhone').value,
+                    deviceName: document.getElementById('deviceName').value,
+                    deviceBrand: document.getElementById('deviceBrand').value,
+                    deviceModel: document.getElementById('deviceModel').value,
+                    deviceCountry: document.getElementById('deviceCountry').value,
+                    deviceSpecs: document.getElementById('deviceSpecs').value,
+                    devicePurpose: document.getElementById('devicePurpose').value,
+                    refHospital: document.getElementById('refHospital').value,
+                    userDepartment: document.getElementById('userDepartment').value,
+                    staffInCharge: document.getElementById('staffInCharge').value,
+                    testDuration: document.getElementById('testDuration').value,
+                    testStart: document.getElementById('testStart').value,
+                    testEnd: document.getElementById('testEnd').value
+                };
+
+                // Gather dynamic tools list
+                const itemNames = document.querySelectorAll('.item-name');
+                const itemQtys = document.querySelectorAll('.item-qty');
+                let itemsString = '';
+                itemNames.forEach((input, index) => {
+                    const name = input.value.trim();
+                    const qty = itemQtys[index].value.trim();
+                    if (name) {
+                        itemsString += `${index + 1}. ${name} จำนวน ${qty} เครื่อง/ชิ้น ${index < itemNames.length - 1 ? ', ' : ''}`;
+                    }
+                });
+                payload.itemsList = itemsString || '-';
+
+                // Gather document checklist states
+                for (let i = 1; i <= 9; i++) {
+                    payload[`docCheck${i}`] = document.getElementById(`doc${i}`).checked;
+                }
+                payload.docOtherText = document.getElementById('docOtherText').value;
+
+                // Helper to convert File to Base64 object
+                const getFileBase64 = (fileInput) => {
+                    return new Promise((resolve) => {
+                        const file = fileInput.files[0];
+                        if (!file) {
+                            resolve(null);
+                            return;
+                        }
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => {
+                            resolve({
+                                name: file.name,
+                                type: file.type,
+                                base64: reader.result
+                            });
+                        };
+                        reader.onerror = () => resolve(null);
+                    });
+                };
+
+                // Gather files as Base64 strings
+                const fileInputs = document.querySelectorAll('.file-input');
+                for (let i = 0; i < fileInputs.length; i++) {
+                    const fileObj = await getFileBase64(fileInputs[i]);
+                    payload[`file${i + 1}`] = fileObj;
+                }
+
+                // Post to GAS Backend Web App if URL is provided
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GAS_WEB_APP_URL_HERE") {
+                    await fetch(GAS_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // standard for GAS to bypass CORS redirect issues
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    console.warn("GAS_WEB_APP_URL is not set. Submission skipped.");
+                    alert("แจ้งเตือน: ยังไม่ได้ตั้งค่าตัวแปร GAS_WEB_APP_URL (ข้อมูลจะไม่ถูกบันทึกเข้า Google Sheets จริง แต่อย่างไรก็ตาม ระบบได้จำลองการส่งข้อมูลเสร็จเรียบร้อยแล้ว)");
+                }
+
+                // Show success modal
+                document.getElementById('successModal').classList.add('active');
+
+            } catch (error) {
+                console.error("Submission failed:", error);
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล: " + error.message);
+            } finally {
+                // Restore button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // Bind printable preview trigger
+        previewBtn.addEventListener('click', () => {
+            if (validateStep(4)) {
+                preparePrintDocument();
+                window.print();
+            }
+        });
+
+        // ==========================================
+        // Prepare Document Data for Print Layout
+        // ==========================================
+        function preparePrintDocument() {
+            // Fields mapping from Web Form -> Print Replica
+            const textFields = [
+                'companyName', 'companyAddress', 'repName', 'repPhone',
+                'deviceName', 'deviceBrand', 'deviceModel', 'deviceCountry', 
+                'deviceSpecs', 'devicePurpose', 'refHospital',
+                'userDepartment', 'staffInCharge', 'testDuration',
+                'sigPrintName', 'sigPosition'
+            ];
+
+            textFields.forEach(id => {
+                const inputVal = document.getElementById(id).value;
+                const printElement = document.getElementById(`print-${id}`);
+                if (printElement) {
+                    // Replace newline in textarea to space or linebreaks for printable
+                    printElement.innerText = inputVal || '-';
+                }
+            });
+
+            // Date conversion to Thai formatted string (Official Thai Government Style)
+            const thaiFullMonths = [
+                'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+            ];
+            
+            const formatDateToThai = (dateStr) => {
+                if (!dateStr) return '-';
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return dateStr;
+                return `${d.getDate()} ${thaiFullMonths[d.getMonth()]} พ.ศ. ${d.getFullYear() + 543}`;
+            };
+
+            document.getElementById('print-testStart').innerText = formatDateToThai(document.getElementById('testStart').value);
+            document.getElementById('print-testEnd').innerText = formatDateToThai(document.getElementById('testEnd').value);
+
+            // Populate Dynamic items
+            const itemNames = document.querySelectorAll('.item-name');
+            const itemQtys = document.querySelectorAll('.item-qty');
+            let itemsString = '';
+            itemNames.forEach((input, index) => {
+                const name = input.value.trim();
+                const qty = itemQtys[index].value.trim();
+                if (name) {
+                    itemsString += `${index + 1}. ${name} จำนวน ${qty} เครื่อง/ชิ้น ${index < itemNames.length - 1 ? ', ' : ''}`;
+                }
+            });
+            document.getElementById('print-itemsList').innerText = itemsString || '-';
+
+            // Document checkboxes map (left column)
+            for (let i = 1; i <= 9; i++) {
+                const isChecked = document.getElementById(`doc${i}`).checked;
+                const printCheckbox = document.getElementById(`print-checkbox-${i}`);
+                if (printCheckbox) {
+                    if (isChecked) {
+                        printCheckbox.classList.add('checked');
+                    } else {
+                        printCheckbox.classList.remove('checked');
+                    }
+                }
+            }
+
+            // Document other description text
+            const docOtherVal = document.getElementById('docOtherText').value;
+            const printOtherVal = document.getElementById('print-docOtherText-val');
+            if (printOtherVal) {
+                printOtherVal.innerText = document.getElementById('doc9').checked ? `(${docOtherVal})` : '';
+            }
+        }
+    </script>
+</body>
+</html>

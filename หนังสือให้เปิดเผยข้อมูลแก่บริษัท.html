@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หนังสือให้เปิดเผยข้อมูลแก่บริษัท / หน่วยงาน</title>
+    
+    <!-- Google Fonts: Prompt for Modern UI, Sarabun for Official Document -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern Design System (Theme & Variables) */
+        :root {
+            --primary: #0f766e;        /* Dark Teal */
+            --primary-hover: #115e59;  /* Deep Teal */
+            --primary-light: #f0fdfa;  /* Light Teal Bg */
+            --secondary: #0284c7;      /* Sky Blue */
+            --text-main: #1f2937;      /* Dark Slate */
+            --text-muted: #4b5563;     /* Muted Gray */
+            --bg-body: #f8fafc;        /* Soft Cool Gray */
+            --bg-card: #ffffff;        /* Pure White */
+            --border-color: #e2e8f0;   /* Light Gray Border */
+            --success: #10b981;        /* Emerald Green */
+            --danger: #ef4444;         /* Red */
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Portal Header */
+        .portal-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .portal-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 16px rgba(15, 118, 110, 0.15);
+        }
+
+        .portal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .portal-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            margin-bottom: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            background-color: #fff;
+            color: var(--text-main);
+            transition: var(--transition);
+            outline: none;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        /* Styled Checkbox List */
+        .checkbox-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 10px;
+            background-color: #f8fafc;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            margin-top: 4px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .checkbox-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .checkbox-inline-input {
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* Signature Display Area */
+        .signature-display-area {
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .sig-container {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 10px 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sig-img {
+            max-height: 50px;
+            object-fit: contain;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .btn {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
+        }
+
+        /* Hidden Printable Document */
+        #print-document {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .form-card {
+                padding: 24px 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ==========================================
+           PRINT STYLESHEET (Exact replica of PNG)
+           ========================================== */
+        @media print {
+            /* Hide the web portal completely */
+            body > *:not(#print-document) {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                margin: 0;
+                font-family: 'Sarabun', sans-serif;
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            #print-document {
+                display: block !important;
+                width: 100%;
+                max-width: 650px;
+                margin: 0 auto;
+                padding: 40px 30px;
+                box-sizing: border-box;
+            }
+
+            .print-header-section {
+                margin-bottom: 25px;
+            }
+
+            .print-row-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 15px;
+            }
+
+            .print-title-at {
+                font-weight: bold;
+            }
+
+            .print-row-date {
+                text-align: right;
+                margin-bottom: 25px;
+            }
+
+            .print-row-meta {
+                margin-bottom: 10px;
+            }
+
+            .print-meta-label {
+                font-weight: bold;
+                display: inline-block;
+                width: 50px;
+            }
+
+            .print-dots {
+                display: inline-block;
+                color: #000;
+                white-space: nowrap; /* Prevent syllable wrapping inside dotted lines */
+            }
+
+            .print-body-content {
+                text-indent: 50px;
+                text-align: left; /* Changed from justify to left to prevent word stretching */
+                margin-bottom: 15px;
+                line-height: 1.7;
+            }
+
+            .print-instruction {
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            /* Checklist print styles */
+            .print-checkbox-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-left: 20px;
+                margin-bottom: 25px;
+            }
+
+            .print-checkbox-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .print-box-square {
+                width: 14px;
+                height: 14px;
+                border: 1px solid #000;
+                display: inline-block;
+                position: relative;
+                flex-shrink: 0;
+                margin-top: 5px;
+            }
+
+            .print-box-square.checked::after {
+                content: '✓';
+                position: absolute;
+                top: -6px;
+                left: 1px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+
+            .print-checkbox-label {
+                flex-content: 1;
+            }
+
+            .print-additional-section {
+                margin-bottom: 35px;
+            }
+
+            .print-closing-section {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* Signature area aligned exactly on the right */
+            .print-signature-area {
+                float: right;
+                width: 320px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 15px;
+            }
+
+            .print-sig-wrapper {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+
+            .print-sig-img {
+                max-height: 48px;
+                object-fit: contain;
+            }
+
+            .print-sig-name {
+                margin-top: 2px;
+            }
+
+            .print-sig-pos {
+                margin-top: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Portal Header -->
+        <header class="portal-header">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <a href="./index.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid #ccc; background: white; color: #333; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    กลับหน้าพอร์ทัลหลัก
+                </a>
+            </div>
+            <div class="portal-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35" fill="currentColor">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+            </div>
+            <h1 class="portal-title">หนังสือให้เปิดเผยข้อมูลแก่บริษัท / หน่วยงาน</h1>
+            <p class="portal-subtitle">กลุ่มงานรังสีวิทยา โรงพยาบาลนครพิงค์</p>
+        </header>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="pacsRequestForm">
+                
+                <div class="form-grid">
+                    <!-- Date Input -->
+                    <div class="form-group">
+                        <label for="requestDate">วันที่ <span style="color: var(--danger);">*</span></label>
+                        <input type="date" id="requestDate" class="form-control" required>
+                    </div>
+                    
+                    <!-- Blank Column for spacing -->
+                    <div class="form-group"></div>
+
+                    <!-- Subject Target Company -->
+                    <div class="form-group full-width">
+                        <label for="subjectTarget">เรื่อง: หนังสือให้เปิดเผยข้อมูลแก่บริษัท / หน่วยงาน <span style="color: var(--danger);">*</span></label>
+                        <input type="text" id="subjectTarget" class="form-control" placeholder="ระบุชื่อบริษัท / หน่วยงาน ที่ต้องการให้เปิดเผยข้อมูล" required>
+                    </div>
+
+                    <!-- Dear Client Name -->
+                    <div class="form-group full-width">
+                        <label for="dearClient">เรียน <span style="color: var(--danger);">*</span></label>
+                        <input type="text" id="dearClient" class="form-control" value="บริษัท ทีจีแอล เมดิคัล ซิสเต็มท์ จำกัด" required>
+                    </div>
+
+                    <!-- Main Body Target Company -->
+                    <div class="form-group full-width">
+                        <label for="bodyTarget">โรงพยาบาลนครพิงค์ มีความประสงค์ให้ ทางบริษัท เปิดเผยข้อมูล PACS แก่บริษัท/หน่วยงาน <span style="color: var(--danger);">*</span></label>
+                        <input type="text" id="bodyTarget" class="form-control" placeholder="ระบุชื่อบริษัท / หน่วยงาน เดียวกับในช่องเรื่อง" required>
+                    </div>
+                </div>
+
+                <!-- Checkbox list -->
+                <div class="form-group full-width">
+                    <label style="font-weight: 600; font-size: 15px; color: var(--primary);">หัวข้อที่ต้องการให้ดำเนินการ (เลือกหัวข้อที่ต้องการ)</label>
+                    
+                    <div class="checkbox-container">
+                        <!-- Option 1 -->
+                        <div class="checkbox-row" onclick="toggleCheckbox(event, 'opt1')">
+                            <input type="checkbox" id="opt1">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">ภาพถ่ายทางการแพทย์ (DICOM)</span>
+                            </div>
+                        </div>
+
+                        <!-- Option 2 -->
+                        <div class="checkbox-row" onclick="toggleCheckbox(event, 'opt2')">
+                            <input type="checkbox" id="opt2">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">รายการตรวจ (Worklist)</span>
+                            </div>
+                        </div>
+
+                        <!-- Option 3 -->
+                        <div class="checkbox-row" onclick="toggleCheckbox(event, 'opt3')">
+                            <input type="checkbox" id="opt3">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">ข้อมูลผู้ป่วย (Patient Information)</span>
+                            </div>
+                        </div>
+
+                        <!-- Option 4 -->
+                        <div class="checkbox-row" onclick="toggleCheckbox(event, 'opt4')">
+                            <input type="checkbox" id="opt4">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">ผลอ่าน (Report)</span>
+                            </div>
+                        </div>
+
+                        <!-- Option 5 -->
+                        <div class="checkbox-row" onclick="toggleCheckbox(event, 'opt5')">
+                            <input type="checkbox" id="opt5">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">ให้สิทธิ์การเข้าถึงระบบจัดเก็บและกระจายภาพ (PACS) ตามที่โรงพยาบาลกำหนด</span>
+                            </div>
+                        </div>
+
+                        <!-- Option 6 -->
+                        <div class="checkbox-row" id="row_opt6" onclick="toggleCheckbox(event, 'opt6')">
+                            <input type="checkbox" id="opt6" onchange="toggleOpt6Input()">
+                            <div class="checkbox-label-wrapper">
+                                <span class="checkbox-title">การนำภาพถ่ายทางการแพทย์ (DICOM) ออกนอกระบบฯ ให้แพทย์ ของบริษัท / หน่วยงาน เข้าถึงได้</span>
+                                <input type="text" id="opt6Text" class="form-control checkbox-inline-input" placeholder="ระบุชื่อแพทย์ หรือแผนกของหน่วยงานปลายทาง">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid" style="margin-top: 24px;">
+                    <!-- Additional details -->
+                    <div class="form-group full-width">
+                        <label for="additionalNotes">เพิ่มเติม</label>
+                        <input type="text" id="additionalNotes" class="form-control" placeholder="ระบุข้อมูลเพิ่มเติม (ถ้ามี)">
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="previewBtn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                        พิมพ์ / บันทึก PDF (จัดตำแหน่งตามรูป)
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        บันทึกข้อมูลคำขอ
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         PRINT DOCUMENT (Hidden on screen, matching layout of PNG)
+         ======================================================= -->
+    <div id="print-document">
+        
+        <div class="print-header-section">
+            <div class="print-row-header" style="font-size: 15px; margin-bottom: 20px;">
+                ที่ &nbsp;&nbsp;&nbsp;กลุ่มงานรังสีวิทยา โรงพยาบาลนครพิงค์
+            </div>
+            <div class="print-row-date" style="text-align: right; margin-bottom: 25px; font-size: 15px;">
+                วันที่ <span class="print-dots" id="print-requestDate" style="width: 220px; text-align: center; display: inline-block;"></span>
+            </div>
+        </div>
+
+        <div class="print-row-meta" style="display: flex; align-items: flex-end; margin-bottom: 12px; font-size: 15px;">
+            <span style="font-weight: bold; white-space: nowrap;">เรื่อง</span>
+            <span style="white-space: nowrap; margin-left: 15px;">หนังสือให้เปิดเผยข้อมูลแก่บริษัท / หน่วยงาน</span>
+            <span class="print-dots" id="print-subjectTarget" style="flex-grow: 1; margin-left: 8px; padding-left: 10px;"></span>
+        </div>
+        
+        <div class="print-row-meta" style="display: flex; align-items: flex-end; margin-bottom: 25px; font-size: 15px;">
+            <span style="font-weight: bold; white-space: nowrap;">เรียน</span>
+            <span class="print-dots" id="print-dearClient" style="flex-grow: 1; margin-left: 15px; padding-left: 10px;"></span>
+        </div>
+
+        <p class="print-body-content" style="text-indent: 50px; text-align: left; margin-bottom: 20px; line-height: 1.75; font-size: 15px;">
+            โรงพยาบาลนครพิงค์ มีความประสงค์ให้ ทางบริษัท ทีจีแอล เมดิคัล ซิสเต็มท์ จำกัด เปิดเผยข้อมูลจากระบบจัดเก็บและกระจายภาพ (PACS) ให้แก่บริษัท / หน่วยงาน <span id="print-bodyTarget" style="font-weight: bold; padding: 0 4px;"></span>
+        </p>
+
+        <div class="print-instruction" style="font-weight: bold; margin-bottom: 20px; font-size: 15px;">
+            ให้ ✓ ในช่อง ▢ หัวข้อที่ต้องการให้ดำเนินการ
+        </div>
+
+        <!-- Checkbox Items -->
+        <div class="print-checkbox-list" style="display: flex; flex-direction: column; gap: 12px; margin-left: 20px; margin-bottom: 25px; font-size: 15px;">
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-1"></span>
+                <span class="print-checkbox-label">ภาพถ่ายทางการแพทย์ (DICOM)</span>
+            </div>
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-2"></span>
+                <span class="print-checkbox-label">รายการตรวจ (Worklist)</span>
+            </div>
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-3"></span>
+                <span class="print-checkbox-label">ข้อมูลผู้ป่วย (Patient Information)</span>
+            </div>
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-4"></span>
+                <span class="print-checkbox-label">ผลอ่าน (Report)</span>
+            </div>
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-5"></span>
+                <span class="print-checkbox-label">ให้สิทธิ์การเข้าถึงระบบจัดเก็บและกระจายภาพ (PACS) ตามที่โรงพยาบาลกำหนด</span>
+            </div>
+            <div class="print-checkbox-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                <span class="print-box-square" id="print-box-6"></span>
+                <span class="print-checkbox-label">
+                    การนำภาพถ่ายทางการแพทย์ (DICOM) ออกนอกระบบฯ ให้แพทย์ ของบริษัท / หน่วยงาน 
+                    <span class="print-dots" id="print-opt6Text" style="width: 220px; text-align: center; display: inline-block;"></span> เข้าถึงได้
+                </span>
+            </div>
+        </div>
+
+        <!-- Additional notes print -->
+        <div class="print-additional-section" style="display: flex; align-items: flex-end; margin-bottom: 35px; font-size: 15px;">
+            <span style="font-weight: bold; white-space: nowrap;">เพิ่มเติม</span>
+            <span class="print-dots" id="print-additionalNotes" style="flex-grow: 1; margin-left: 10px; padding-left: 10px;"></span>
+        </div>
+
+        <div class="print-closing-section" style="text-align: center; margin-bottom: 25px; font-size: 15px;">
+            จึงเรียนมาเพื่อทราบ
+        </div>
+
+        <!-- Signature Alignment (Right Aligned) -->
+        <div style="width: 100%; display: inline-block; font-size: 15px;">
+            <div class="print-signature-area" style="float: right; width: 320px; text-align: center; display: flex; flex-direction: column; align-items: center; margin-top: 15px;">
+                <div>ขอแสดงความนับถือ</div>
+                <div class="print-sig-wrapper" style="height: 50px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                    <img src="ลายเซ็น-removebg-preview.png" alt="ลายเซ็น" class="print-sig-img" style="max-height: 48px; object-fit: contain;">
+                </div>
+                <div class="print-sig-name" style="margin-top: 2px;">(นายชาญวิทย์ ไชยโรจน์)</div>
+                <div class="print-sig-pos" style="margin-top: 2px;">ตำแหน่ง นักรังสีการแพทย์ชำนาญการพิเศษ</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Configurable backend URL
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8a9yS_EfM47G_vmVn-KHuvlpmyUkVGeNp3COyjg1S3kcCbR_X_4BmPyZdYBxodwBt/exec";
+
+        const form = document.getElementById('pacsRequestForm');
+        const previewBtn = document.getElementById('previewBtn');
+        const opt6Check = document.getElementById('opt6');
+        const opt6TextInput = document.getElementById('opt6Text');
+
+        // Set default date to today
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            document.getElementById('requestDate').value = today.toISOString().split('T')[0];
+            
+            // Sync subject and body targets
+            const subInput = document.getElementById('subjectTarget');
+            const bodyInput = document.getElementById('bodyTarget');
+            subInput.addEventListener('input', () => {
+                bodyInput.value = subInput.value;
+            });
+        });
+
+        // Inline toggle checkbox row
+        function toggleCheckbox(e, id) {
+            // If the user clicked the checkbox directly, let the browser handle it.
+            if (e.target.type === 'checkbox') {
+                return;
+            }
+            const el = document.getElementById(id);
+            if (el) {
+                el.checked = !el.checked;
+                // Dispatch change event programmatically to trigger listeners (like opt6)
+                el.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Handle option 6 input display
+        function toggleOpt6Input() {
+            if (opt6Check.checked) {
+                opt6TextInput.style.display = 'block';
+                opt6TextInput.required = true;
+                opt6TextInput.focus();
+            } else {
+                opt6TextInput.style.display = 'none';
+                opt6TextInput.required = false;
+                opt6TextInput.value = '';
+            }
+        }
+
+        // Prevent label click toggling option 6 when writing in text input
+        opt6TextInput.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Form Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            preparePrintDocument();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25"></circle>
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"></path>
+                    </svg>
+                    กำลังบันทึกข้อมูล...
+                `;
+
+                if (!document.getElementById('spin-keyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'spin-keyframes';
+                    style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+                    document.head.appendChild(style);
+                }
+
+                // Gather payload
+                const payload = {
+                    formType: 'pacs',
+                    pacsId: 'PCS-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    requestDate: document.getElementById('requestDate').value,
+                    subjectTarget: document.getElementById('subjectTarget').value,
+                    dearClient: document.getElementById('dearClient').value,
+                    bodyTarget: document.getElementById('bodyTarget').value,
+                    additionalNotes: document.getElementById('additionalNotes').value,
+                    
+                    // Checklist Options
+                    opt1: document.getElementById('opt1').checked,
+                    opt2: document.getElementById('opt2').checked,
+                    opt3: document.getElementById('opt3').checked,
+                    opt4: document.getElementById('opt4').checked,
+                    opt5: document.getElementById('opt5').checked,
+                    opt6: document.getElementById('opt6').checked,
+                    opt6Text: document.getElementById('opt6Text').value
+                };
+
+                // Submit to GAS Backend Web App
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GAS_WEB_APP_URL_HERE") {
+                    await fetch(GAS_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    console.warn("GAS_WEB_APP_URL is not set. Submission skipped.");
+                    alert("แจ้งเตือน: ยังไม่ได้ตั้งค่าตัวแปร GAS_WEB_APP_URL (ข้อมูลจะไม่ถูกบันทึกเข้า Google Sheets จริง แต่อย่างไรก็ตาม ระบบได้จำลองการส่งข้อมูลเสร็จเรียบร้อยแล้ว)");
+                }
+
+                alert('บันทึกคำขอข้อมูลเข้าระบบเสร็จสิ้น! ลายเซ็นของคุณชาญวิทย์ถูกบันทึกลงเอกสารเรียบร้อย');
+
+            } catch (error) {
+                console.error("PACS submission failed:", error);
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล: " + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // Print preview bind
+        previewBtn.addEventListener('click', () => {
+            if (form.reportValidity()) {
+                preparePrintDocument();
+                window.print();
+            }
+        });
+
+        // Prepare print values matching A4 layout
+        function preparePrintDocument() {
+            // Text inputs
+            const textFields = ['subjectTarget', 'dearClient', 'bodyTarget', 'additionalNotes'];
+            textFields.forEach(id => {
+                const val = document.getElementById(id).value;
+                const printEl = document.getElementById(`print-${id}`);
+                if (printEl) {
+                    printEl.innerText = val || '';
+                }
+            });
+
+            // Date Conversion (Official Thai Government Style)
+            const thaiFullMonths = [
+                'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+            ];
+            
+            const formatDateToThai = (dateStr) => {
+                if (!dateStr) return '';
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return dateStr;
+                return `${d.getDate()} ${thaiFullMonths[d.getMonth()]} พ.ศ. ${d.getFullYear() + 543}`;
+            };
+            document.getElementById('print-requestDate').innerText = formatDateToThai(document.getElementById('requestDate').value);
+
+            // Special Checkbox Options
+            for (let i = 1; i <= 6; i++) {
+                const isChecked = document.getElementById(`opt${i}`).checked;
+                const printBox = document.getElementById(`print-box-${i}`);
+                if (printBox) {
+                    if (isChecked) {
+                        printBox.classList.add('checked');
+                    } else {
+                        printBox.classList.remove('checked');
+                    }
+                }
+            }
+
+            // Option 6 Text inline
+            const opt6TextVal = opt6TextInput.value.trim();
+            document.getElementById('print-opt6Text').innerText = opt6TextVal || '';
+        }
+    </script>
+</body>
+</html>

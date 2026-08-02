@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินการทดลองใช้งานเครื่องมือแพทย์</title>
+    
+    <!-- Google Fonts: Prompt for Modern UI, Sarabun for Official Document -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern Design System (Theme & Variables) */
+        :root {
+            --primary: #0f766e;        /* Dark Teal */
+            --primary-hover: #115e59;  /* Deep Teal */
+            --primary-light: #f0fdfa;  /* Light Teal Bg */
+            --secondary: #0284c7;      /* Sky Blue */
+            --text-main: #1f2937;      /* Dark Slate */
+            --text-muted: #4b5563;     /* Muted Gray */
+            --bg-body: #f8fafc;        /* Soft Cool Gray */
+            --bg-card: #ffffff;        /* Pure White */
+            --border-color: #e2e8f0;   /* Light Gray Border */
+            --success: #10b981;        /* Emerald Green */
+            --danger: #ef4444;         /* Red */
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Portal Header */
+        .portal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .portal-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+        }
+
+        .portal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .portal-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Process Notice Banner */
+        .process-banner {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #1e3a8a;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .process-banner svg {
+            width: 20px;
+            height: 20px;
+            fill: #1e40af;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            margin-bottom: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 12px;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        /* Input Controls */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-group label span.required {
+            color: var(--danger);
+        }
+
+        .form-control {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            background-color: #fff;
+            color: var(--text-main);
+            transition: var(--transition);
+            outline: none;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Evaluation Matrix Table Styling */
+        .matrix-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 600px;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .matrix-table th {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .matrix-table th:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .matrix-table td:first-child {
+            text-align: left;
+            padding-left: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .matrix-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .matrix-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Radio Input Styling */
+        .rating-radio {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .rating-radio:hover {
+            transform: scale(1.2);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .btn {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
+        }
+
+        /* Success modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transform: scale(0.9);
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #d1fae5;
+            color: var(--success);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Hidden Printable Document */
+        #print-document {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .form-card {
+                padding: 24px 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ==========================================
+           PRINT STYLESHEET (High fidelity with PNG)
+           ========================================== */
+        @media print {
+            /* Hide the web portal completely */
+            body > *:not(#print-document) {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                margin: 0;
+                font-family: 'Sarabun', sans-serif;
+                font-size: 13.5px;
+                line-height: 1.35;
+            }
+
+            #print-document {
+                display: block !important;
+                width: 100%;
+                padding: 10px;
+            }
+
+            .doc-title-bar {
+                border: 1px solid #000;
+                padding: 6px;
+                font-size: 13.5px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+
+            .doc-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+
+            .doc-table td {
+                border: 1px solid #000;
+                padding: 5px 8px;
+                vertical-align: top;
+            }
+
+            .doc-section-title {
+                font-weight: bold;
+                background-color: #f1f5f9;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-bottom: 1px solid #000;
+                padding: 2px 0;
+            }
+
+            .doc-field-line {
+                margin-bottom: 4px;
+            }
+
+            .doc-dots {
+                border-bottom: 1px dotted #000;
+                display: inline-block;
+                padding-left: 5px;
+                color: #000;
+                font-weight: 500;
+            }
+
+            /* Evaluation Matrix Table in print */
+            .doc-matrix-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+
+            .doc-matrix-table th, .doc-matrix-table td {
+                border: 1px solid #000;
+                padding: 4px 6px;
+                text-align: center;
+                font-size: 12.5px;
+            }
+
+            .doc-matrix-table th {
+                font-weight: bold;
+                background-color: #f1f5f9;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .doc-matrix-table td:first-child {
+                text-align: left;
+                padding-left: 10px;
+            }
+
+            .print-check {
+                font-family: Arial, sans-serif;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .doc-pros-cons-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+
+            .doc-pros-cons-table td {
+                border: 1px solid #000;
+                width: 50%;
+                padding: 8px;
+                height: 70px;
+                vertical-align: top;
+            }
+
+            .doc-label {
+                font-weight: bold;
+                margin-bottom: 4px;
+                display: block;
+            }
+
+            .doc-val-text {
+                font-size: 12.5px;
+                text-align: justify;
+                white-space: pre-wrap;
+            }
+
+            .doc-comparison-box {
+                border: 1px solid #000;
+                border-top: none;
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+
+            .doc-suggestions-box {
+                border: 1px solid #000;
+                padding: 8px;
+                margin-bottom: 10px;
+                min-height: 80px;
+            }
+
+            .doc-note-footer {
+                font-size: 12px;
+                font-style: italic;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Portal Header -->
+        <header class="portal-header">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <a href="./index.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid #ccc; background: white; color: #333; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    กลับหน้าพอร์ทัลหลัก
+                </a>
+            </div>
+            <div class="portal-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+            </div>
+            <h1 class="portal-title">แบบประเมินการทดลองใช้งานเครื่องมือแพทย์</h1>
+            <p class="portal-subtitle">แบบฟอร์มบันทึกผลการประเมินจากผู้ใช้งานเครื่องมือแพทย์ฝั่งโรงพยาบาล หลังเสร็จสิ้นการทดลองใช้</p>
+        </header>
+
+        <!-- Process notice -->
+        <div class="process-banner">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <div>
+                <strong>ขั้นตอนปัจจุบัน (ขั้นตอนที่ 2):</strong> แบบฟอร์มนี้เป็นขั้นตอนถัดจากขั้นตอนขออนญาตนำเข้าเครื่อง เพื่อประเมินความพึงพอใจและประสิทธิภาพการใช้งานสำหรับโรงพยาบาลเพื่อเป็นฐานข้อมูลในการพิจารณาจัดหาเครื่องมือแพทย์ในลำดับถัดไป
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="evaluationForm">
+                
+                <!-- SECTION 1: ข้อมูลผู้ติดต่อ & เครื่องมือแพทย์ (ดึงโครงสร้างเดียวกับฟอร์มขออนุญาต) -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        1. ข้อมูลทั่วไปเกี่ยวกับการทดลองใช้งาน (General Details)
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <!-- ผู้ติดต่อบริษัท -->
+                        <div class="form-group">
+                            <label for="companyName">ชื่อบริษัท/ห้างร้าน <span class="required">*</span></label>
+                            <input type="text" id="companyName" class="form-control" placeholder="ระบุชื่อบริษัท/ห้างร้านที่จัดส่งเครื่อง" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="repName">ชื่อผู้แทนจำหน่าย <span class="required">*</span></label>
+                            <input type="text" id="repName" class="form-control" placeholder="ชื่อ-นามสกุล ของตัวแทนผู้ประสานงาน" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="companyAddress">ที่อยู่ <span class="required">*</span></label>
+                            <input type="text" id="companyAddress" class="form-control" placeholder="ระบุที่อยู่ที่ใช้ติดต่อ" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="repPhone">โทรศัพท์ <span class="required">*</span></label>
+                            <input type="tel" id="repPhone" class="form-control" placeholder="หมายเลขโทรศัพท์ติดต่อ" required>
+                        </div>
+                        
+                        <!-- ข้อมูลเครื่องมือแพทย์ -->
+                        <div class="form-group">
+                            <label for="deviceName">ชื่อเครื่องมือแพทย์ <span class="required">*</span></label>
+                            <input type="text" id="deviceName" class="form-control" placeholder="ระบุชื่อเครื่องมือแพทย์ที่นำมาทดลองใช้" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceBrand">ยี่ห้อ <span class="required">*</span></label>
+                            <input type="text" id="deviceBrand" class="form-control" placeholder="ยี่ห้อผู้ผลิต" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceModel">รุ่น <span class="required">*</span></label>
+                            <input type="text" id="deviceModel" class="form-control" placeholder="รุ่น (Model)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceCountry">ผลิตจากประเทศ <span class="required">*</span></label>
+                            <input type="text" id="deviceCountry" class="form-control" placeholder="ประเทศผู้ผลิตต้นทาง" required>
+                        </div>
+
+                        <!-- ข้อมูลการทดลองใช้ -->
+                        <div class="form-group">
+                            <label for="userDepartment">หน่วยงานผู้ใช้ <span class="required">*</span></label>
+                            <input type="text" id="userDepartment" class="form-control" placeholder="แผนก/หอผู้ป่วยที่นำเครื่องไปทดลอง" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffInCharge">แพทย์/พยาบาล/เจ้าหน้าที่ผู้ประเมิน <span class="required">*</span></label>
+                            <input type="text" id="staffInCharge" class="form-control" placeholder="ระบุชื่อเจ้าหน้าที่ผู้ดูแลการทดลองใช้งาน" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="itemsList">รายการเครื่องมือ/วัสดุที่นำมาทดลองใช้ประกอบด้วย (ระบุจำนวน) <span class="required">*</span></label>
+                            <input type="text" id="itemsList" class="form-control" placeholder="เช่น 1. เครื่องติดตามสัญญาณชีพ จำนวน 1 เครื่อง เป็นต้น" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testDuration">ระยะเวลาการทดลองใช้ (วัน) <span class="required">*</span></label>
+                            <input type="number" id="testDuration" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <!-- Spacer -->
+                        </div>
+                        <div class="form-group">
+                            <label for="testStart">ตั้งแต่วันที่ <span class="required">*</span></label>
+                            <input type="date" id="testStart" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="testEnd">ถึงวันที่ <span class="required">*</span></label>
+                            <input type="date" id="testEnd" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: ตารางประเมินผลการใช้งาน (Rating Matrix) -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        2. ตารางประเมินผลการใช้งาน (Performance Evaluation)
+                    </h2>
+                    
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">กรุณาเลือกคะแนนประเมินความเห็นตามความเหมาะสมระดับการใช้งานจริง (1 = น้อยมาก ถึง 5 = มากที่สุด)</p>
+                    
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>หัวข้อการประเมิน</th>
+                                    <th style="width: 12%;">น้อยมาก (1)</th>
+                                    <th style="width: 12%;">น้อย (2)</th>
+                                    <th style="width: 12%;">ปานกลาง (3)</th>
+                                    <th style="width: 12%;">มาก (4)</th>
+                                    <th style="width: 12%;">มากที่สุด (5)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Q1 -->
+                                <tr>
+                                    <td>๑. การใช้งานง่าย</td>
+                                    <td><input type="radio" name="score_q1" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q1" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q1" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q1" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q1" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q2 -->
+                                <tr>
+                                    <td>๒. ขนาดเหมาะสม</td>
+                                    <td><input type="radio" name="score_q2" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q2" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q2" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q2" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q2" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q3 -->
+                                <tr>
+                                    <td>๓. การดูแลรักษาง่าย</td>
+                                    <td><input type="radio" name="score_q3" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q3" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q3" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q3" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q3" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q4 -->
+                                <tr>
+                                    <td>๔. ค่าได้มาตรฐาน</td>
+                                    <td><input type="radio" name="score_q4" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q4" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q4" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q4" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q4" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q5 -->
+                                <tr>
+                                    <td>๕. ราคาคุ้มค่า</td>
+                                    <td><input type="radio" name="score_q5" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q5" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q5" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q5" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q5" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q6 -->
+                                <tr>
+                                    <td>๖. ไม่มีปัญหาในระหว่างการใช้งาน</td>
+                                    <td><input type="radio" name="score_q6" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q6" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q6" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q6" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q6" value="5" class="rating-radio"></td>
+                                </tr>
+                                <!-- Q7 -->
+                                <tr>
+                                    <td>๗. มีบริการหลังการขาย</td>
+                                    <td><input type="radio" name="score_q7" value="1" class="rating-radio" required></td>
+                                    <td><input type="radio" name="score_q7" value="2" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q7" value="3" class="rating-radio" checked></td>
+                                    <td><input type="radio" name="score_q7" value="4" class="rating-radio"></td>
+                                    <td><input type="radio" name="score_q7" value="5" class="rating-radio"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: ความคิดเห็นเชิงคุณภาพ ข้อดี-ข้อเสีย และเปรียบเทียบ -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+                        3. รายละเอียดข้อดี-ข้อเสีย และข้อเสนอแนะ (Pros, Cons & Suggestions)
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="pros">ข้อดี <span class="required">*</span></label>
+                            <textarea id="pros" class="form-control" placeholder="ระบุรายละเอียดข้อดี หรือจุดเด่นของเครื่องมือนี้จากการทดลองใช้" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cons">ข้อเสีย <span class="required">*</span></label>
+                            <textarea id="cons" class="form-control" placeholder="ระบุข้อบกพร่อง ข้อจำกัด หรือข้อเสียที่พบระหว่างการทดลองใช้" required></textarea>
+                        </div>
+
+                        <!-- ส่วนเปรียบเทียบกับเครื่องยี่ห้ออื่นประเภทเดียวกัน -->
+                        <div class="form-group full-width" style="border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); background-color: #f8fafc; margin-top: 10px;">
+                            <label style="font-weight: 600; font-size: 15px; color: var(--primary); margin-bottom: 12px; display: block;">
+                                เปรียบเทียบ ข้อดี - ข้อเสียเครื่องประเภทเดียวกัน (ถ้ามี)
+                            </label>
+                            <div class="form-grid" style="gap: 15px;">
+                                <div class="form-group">
+                                    <label for="compareBrand">ยี่ห้อ (ที่นำมาเปรียบเทียบ)</label>
+                                    <input type="text" id="compareBrand" class="form-control" placeholder="ระบุยี่ห้อเครื่องที่นำมาเปรียบเทียบ">
+                                </div>
+                                <div class="form-group">
+                                    <label for="compareModel">รุ่น (ที่นำมาเปรียบเทียบ)</label>
+                                    <input type="text" id="compareModel" class="form-control" placeholder="ระบุรุ่นเครื่องที่นำมาเปรียบเทียบ">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="compareDetails">รายละเอียดผลการเปรียบเทียบ</label>
+                                    <textarea id="compareDetails" class="form-control" placeholder="ระบุรายละเอียดการเปรียบเทียบข้อดี-ข้อเสีย เมื่อเทียบกับเครื่องอื่นที่ท่านเคยใช้งาน"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ข้อเสนอแนะอื่นๆ -->
+                        <div class="form-group full-width" style="margin-top: 10px;">
+                            <label for="suggestions">ส่วนที่ 3 ข้อเสนอแนะ ความคิดเห็นอื่น ๆ</label>
+                            <textarea id="suggestions" class="form-control" placeholder="ระบุข้อเสนอแนะเพิ่มเติมเพื่อช่วยในการพิจารณาจัดซื้อจัดหา"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="previewBtn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                        พิมพ์ / บันทึก PDF
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        ส่งผลการประเมิน
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-card">
+            <div class="modal-icon">✓</div>
+            <h3 class="modal-title">ส่งแบบประเมินสำเร็จ!</h3>
+            <p class="modal-desc">
+                บันทึกผลการประเมินความพึงพอใจการทดลองใช้งานเครื่องมือแพทย์ในระบบเรียบร้อยแล้ว ท่านสามารถดาวน์โหลดเอกสาร PDF เพื่อเก็บเป็นหลักฐานการประเมินของหน่วยงานได้
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeSuccessModal()">ปิดหน้าต่าง</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                    พิมพ์ / บันทึก PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         PRINT DOCUMENT (Hidden on screen, shown when printing)
+         ======================================================= -->
+    <div id="print-document">
+        
+        <!-- Document Title Bar -->
+        <div class="doc-title-bar">
+            <span>แบบประเมินการทดลองใช้งานเครื่องมือแพทย์</span>
+        </div>
+
+        <table class="doc-table">
+            <!-- 1. ข้อมูลผู้ติดต่อ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลผู้ติดต่อ</div>
+                    <div class="doc-field-line">
+                        ชื่อบริษัท/ห้างร้าน: <span class="doc-dots" id="print-companyName" style="width: 80%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ที่อยู่: <span class="doc-dots" id="print-companyAddress" style="width: 90%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ชื่อผู้แทนจำหน่าย: <span class="doc-dots" id="print-repName" style="width: 45%;"></span> 
+                        โทรศัพท์: <span class="doc-dots" id="print-repPhone" style="width: 35%;"></span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 2. ข้อมูลเครื่องมือ/วัสดุ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลเครื่องมือ/วัสดุ</div>
+                    <div class="doc-field-line">
+                        ชื่อเครื่องมือ: <span class="doc-dots" id="print-deviceName" style="width: 85%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ยี่ห้อ: <span class="doc-dots" id="print-deviceBrand" style="width: 25%;"></span> 
+                        รุ่น: <span class="doc-dots" id="print-deviceModel" style="width: 25%;"></span> 
+                        ผลิตภัณฑ์ประเทศ: <span class="doc-dots" id="print-deviceCountry" style="width: 28%;"></span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 3. ข้อมูลการทดลองใช้ -->
+            <tr>
+                <td colspan="2">
+                    <div class="doc-section-title">ข้อมูลการทดลองใช้</div>
+                    <div class="doc-field-line">
+                        หน่วยงานผู้ใช้: <span class="doc-dots" id="print-userDepartment" style="width: 85%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        แพทย์/พยาบาล/เจ้าหน้าที่: <span class="doc-dots" id="print-staffInCharge" style="width: 78%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        รายการเครื่องมือ/วัสดุ ที่นำมาทดลองใช้ประกอบด้วย ระบุจำนวน: 
+                        <span class="doc-dots" id="print-itemsList" style="width: 60%;"></span>
+                    </div>
+                    <div class="doc-field-line">
+                        ระยะเวลาการทดลองใช้: <span class="doc-dots" id="print-testDuration" style="width: 10%;"></span> วัน 
+                        ตั้งแต่วันที่: <span class="doc-dots" id="print-testStart" style="width: 28%;"></span> 
+                        ถึงวันที่: <span class="doc-dots" id="print-testEnd" style="width: 28%;"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Rating Matrix section for print -->
+        <table class="doc-matrix-table">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-left: 10px;">การประเมิน</th>
+                    <th style="width: 13%;">น้อยมาก</th>
+                    <th style="width: 13%;">น้อย</th>
+                    <th style="width: 13%;">ปานกลาง</th>
+                    <th style="width: 13%;">มาก</th>
+                    <th style="width: 13%;">มากที่สุด</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Q1 -->
+                <tr>
+                    <td>๑. การใช้งานง่าย</td>
+                    <td><span id="print-q1-v1" class="print-check"></span></td>
+                    <td><span id="print-q1-v2" class="print-check"></span></td>
+                    <td><span id="print-q1-v3" class="print-check"></span></td>
+                    <td><span id="print-q1-v4" class="print-check"></span></td>
+                    <td><span id="print-q1-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q2 -->
+                <tr>
+                    <td>๒. ขนาดเหมาะสม</td>
+                    <td><span id="print-q2-v1" class="print-check"></span></td>
+                    <td><span id="print-q2-v2" class="print-check"></span></td>
+                    <td><span id="print-q2-v3" class="print-check"></span></td>
+                    <td><span id="print-q2-v4" class="print-check"></span></td>
+                    <td><span id="print-q2-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q3 -->
+                <tr>
+                    <td>๓. การดูแลรักษาง่าย</td>
+                    <td><span id="print-q3-v1" class="print-check"></span></td>
+                    <td><span id="print-q3-v2" class="print-check"></span></td>
+                    <td><span id="print-q3-v3" class="print-check"></span></td>
+                    <td><span id="print-q3-v4" class="print-check"></span></td>
+                    <td><span id="print-q3-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q4 -->
+                <tr>
+                    <td>๔. ค่าได้มาตรฐาน</td>
+                    <td><span id="print-q4-v1" class="print-check"></span></td>
+                    <td><span id="print-q4-v2" class="print-check"></span></td>
+                    <td><span id="print-q4-v3" class="print-check"></span></td>
+                    <td><span id="print-q4-v4" class="print-check"></span></td>
+                    <td><span id="print-q4-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q5 -->
+                <tr>
+                    <td>๕. ราคาคุ้มค่า</td>
+                    <td><span id="print-q5-v1" class="print-check"></span></td>
+                    <td><span id="print-q5-v2" class="print-check"></span></td>
+                    <td><span id="print-q5-v3" class="print-check"></span></td>
+                    <td><span id="print-q5-v4" class="print-check"></span></td>
+                    <td><span id="print-q5-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q6 -->
+                <tr>
+                    <td>๖. ไม่มีปัญหาในระหว่างการใช้งาน</td>
+                    <td><span id="print-q6-v1" class="print-check"></span></td>
+                    <td><span id="print-q6-v2" class="print-check"></span></td>
+                    <td><span id="print-q6-v3" class="print-check"></span></td>
+                    <td><span id="print-q6-v4" class="print-check"></span></td>
+                    <td><span id="print-q6-v5" class="print-check"></span></td>
+                </tr>
+                <!-- Q7 -->
+                <tr>
+                    <td>๗. มีบริการหลังการขาย</td>
+                    <td><span id="print-q7-v1" class="print-check"></span></td>
+                    <td><span id="print-q7-v2" class="print-check"></span></td>
+                    <td><span id="print-q7-v3" class="print-check"></span></td>
+                    <td><span id="print-q7-v4" class="print-check"></span></td>
+                    <td><span id="print-q7-v5" class="print-check"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pros and Cons -->
+        <table class="doc-pros-cons-table">
+            <tr>
+                <td>
+                    <span class="doc-label">ข้อดี</span>
+                    <div id="print-pros" class="doc-val-text"></div>
+                </td>
+                <td>
+                    <span class="doc-label">ข้อเสีย</span>
+                    <div id="print-cons" class="doc-val-text"></div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Comparisons -->
+        <div class="doc-comparison-box">
+            <span class="doc-label">เปรียบเทียบ ข้อดี - ข้อเสียเครื่องประเภทเดียวกัน (ถ้ามี)</span>
+            <div class="doc-field-line" style="margin-top: 5px;">
+                ยี่ห้อ: <span class="doc-dots" id="print-compareBrand" style="width: 35%;"></span> 
+                รุ่น: <span class="doc-dots" id="print-compareModel" style="width: 45%;"></span>
+            </div>
+            <div class="doc-field-line" style="margin-top: 5px;">
+                รายละเอียดผลการเปรียบเทียบ:
+                <div id="print-compareDetails" class="doc-val-text" style="margin-top: 4px; padding-left: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- Section 3 Suggestions -->
+        <div class="doc-suggestions-box">
+            <span class="doc-label">ส่วนที่ ๓ ข้อเสนอแนะ ความคิดเห็นอื่น ๆ</span>
+            <div id="print-suggestions" class="doc-val-text" style="margin-top: 4px; padding-left: 10px;"></div>
+        </div>
+
+        <!-- Note Footer -->
+        <div class="doc-note-footer">
+            <strong>หมายเหตุ</strong> หากท่านได้ตอบแบบประเมินครบถ้วนแล้ว กรุณาส่งคืนศูนย์เครื่องมือแพทย์โรงพยาบาล............................................. เพื่อใช้เป็นข้อมูลสำหรับความพิจารณาจัดหาในครั้งต่อไป
+        </div>
+
+    </div>
+
+    <!-- Script logic for date sync, print preview and form submission -->
+    <script>
+        // Configurable backend URL
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8a9yS_EfM47G_vmVn-KHuvlpmyUkVGeNp3COyjg1S3kcCbR_X_4BmPyZdYBxodwBt/exec";
+
+        const previewBtn = document.getElementById('previewBtn');
+        const form = document.getElementById('evaluationForm');
+
+        // Initial setup for dates
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const startStr = today.toISOString().split('T')[0];
+            
+            const startInput = document.getElementById('testStart');
+            const endInput = document.getElementById('testEnd');
+            
+            startInput.value = startStr;
+            
+            // set default end to +30 days
+            const thirtyDaysLater = new Date(today);
+            thirtyDaysLater.setDate(today.getDate() + 30);
+            const endStr = thirtyDaysLater.toISOString().split('T')[0];
+            endInput.value = endStr;
+            
+            document.getElementById('testDuration').value = 30;
+
+            // Date sync
+            startInput.addEventListener('change', () => {
+                endInput.min = startInput.value;
+                if (endInput.value < startInput.value) {
+                    endInput.value = startInput.value;
+                }
+                calculateDuration();
+            });
+
+            endInput.addEventListener('change', () => {
+                calculateDuration();
+            });
+
+            document.getElementById('testDuration').addEventListener('input', () => {
+                calculateEndDate();
+            });
+        });
+
+        function calculateDuration() {
+            const startVal = new Date(document.getElementById('testStart').value);
+            const endVal = new Date(document.getElementById('testEnd').value);
+            if (startVal && endVal && endVal >= startVal) {
+                const diffTime = Math.abs(endVal - startVal);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('testDuration').value = diffDays;
+            }
+        }
+
+        function calculateEndDate() {
+            const startVal = new Date(document.getElementById('testStart').value);
+            const days = parseInt(document.getElementById('testDuration').value);
+            if (startVal && !isNaN(days) && days > 0) {
+                const endVal = new Date(startVal);
+                endVal.setDate(startVal.getDate() + days - 1);
+                document.getElementById('testEnd').value = endVal.toISOString().split('T')[0];
+            }
+        }
+
+        // Form Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate all radios are selected (HTML5 required does this, but double check)
+            let allValid = true;
+            for(let i=1; i<=7; i++) {
+                const checkedRadio = document.querySelector(`input[name="score_q${i}"]:checked`);
+                if(!checkedRadio) {
+                    allValid = false;
+                }
+            }
+
+            if (!allValid) {
+                alert("กรุณากรอกประเมินผลให้ครบทั้ง 7 หัวข้อ");
+                return;
+            }
+
+            preparePrintDocument();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25"></circle>
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"></path>
+                    </svg>
+                    กำลังบันทึกคะแนน...
+                `;
+
+                if (!document.getElementById('spin-keyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'spin-keyframes';
+                    style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+                    document.head.appendChild(style);
+                }
+
+                // Gather payload
+                const payload = {
+                    formType: 'evaluation',
+                    evaluationId: 'EVL-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    companyName: document.getElementById('companyName').value,
+                    companyAddress: document.getElementById('companyAddress').value,
+                    repName: document.getElementById('repName').value,
+                    repPhone: document.getElementById('repPhone').value,
+                    deviceName: document.getElementById('deviceName').value,
+                    deviceBrand: document.getElementById('deviceBrand').value,
+                    deviceModel: document.getElementById('deviceModel').value,
+                    deviceCountry: document.getElementById('deviceCountry').value,
+                    userDepartment: document.getElementById('userDepartment').value,
+                    staffInCharge: document.getElementById('staffInCharge').value,
+                    itemsList: document.getElementById('itemsList').value,
+                    testDuration: document.getElementById('testDuration').value,
+                    testStart: document.getElementById('testStart').value,
+                    testEnd: document.getElementById('testEnd').value,
+                    
+                    // Scores 1-7
+                    score_q1: parseInt(document.querySelector('input[name="score_q1"]:checked').value),
+                    score_q2: parseInt(document.querySelector('input[name="score_q2"]:checked').value),
+                    score_q3: parseInt(document.querySelector('input[name="score_q3"]:checked').value),
+                    score_q4: parseInt(document.querySelector('input[name="score_q4"]:checked').value),
+                    score_q5: parseInt(document.querySelector('input[name="score_q5"]:checked').value),
+                    score_q6: parseInt(document.querySelector('input[name="score_q6"]:checked').value),
+                    score_q7: parseInt(document.querySelector('input[name="score_q7"]:checked').value),
+                    
+                    // Qualitative feedback
+                    pros: document.getElementById('pros').value,
+                    cons: document.getElementById('cons').value,
+                    compareBrand: document.getElementById('compareBrand').value,
+                    compareModel: document.getElementById('compareModel').value,
+                    compareDetails: document.getElementById('compareDetails').value,
+                    suggestions: document.getElementById('suggestions').value
+                };
+
+                // Submit to GAS Web App
+                if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GAS_WEB_APP_URL_HERE") {
+                    await fetch(GAS_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    console.warn("GAS_WEB_APP_URL is not set. Submission skipped.");
+                    alert("แจ้งเตือน: ยังไม่ได้ตั้งค่าตัวแปร GAS_WEB_APP_URL (ข้อมูลจะไม่ถูกบันทึกเข้า Google Sheets จริง แต่อย่างไรก็ตาม ระบบได้จำลองการส่งข้อมูลเสร็จเรียบร้อยแล้ว)");
+                }
+
+                // Show success modal
+                document.getElementById('successModal').classList.add('active');
+
+            } catch (error) {
+                console.error("Evaluation submission failed:", error);
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล: " + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        previewBtn.addEventListener('click', () => {
+            if(form.reportValidity()) {
+                preparePrintDocument();
+                window.print();
+            }
+        });
+
+        // Populate print document values
+        function preparePrintDocument() {
+            // General text fields
+            const textFields = [
+                'companyName', 'companyAddress', 'repName', 'repPhone',
+                'deviceName', 'deviceBrand', 'deviceModel', 'deviceCountry', 
+                'userDepartment', 'staffInCharge', 'itemsList', 'testDuration',
+                'pros', 'cons', 'compareBrand', 'compareModel', 'compareDetails',
+                'suggestions'
+            ];
+
+            textFields.forEach(id => {
+                const val = document.getElementById(id).value;
+                const printEl = document.getElementById(`print-${id}`);
+                if (printEl) {
+                    printEl.innerText = val || '-';
+                }
+            });
+
+            // Date conversion (Official Thai Government Style)
+            const thaiFullMonths = [
+                'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+            ];
+            
+            const formatDateToThai = (dateStr) => {
+                if (!dateStr) return '-';
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return dateStr;
+                return `${d.getDate()} ${thaiFullMonths[d.getMonth()]} พ.ศ. ${d.getFullYear() + 543}`;
+            };
+
+            document.getElementById('print-testStart').innerText = formatDateToThai(document.getElementById('testStart').value);
+            document.getElementById('print-testEnd').innerText = formatDateToThai(document.getElementById('testEnd').value);
+
+            // Populating radio scores checkmarks
+            for (let q = 1; q <= 7; q++) {
+                // Clear existing print checks for this question
+                for (let v = 1; v <= 5; v++) {
+                    document.getElementById(`print-q${q}-v${v}`).innerText = '';
+                }
+                
+                // Set the checked one
+                const checkedRadio = document.querySelector(`input[name="score_q${q}"]:checked`);
+                if (checkedRadio) {
+                    const valueSelected = checkedRadio.value;
+                    const printCell = document.getElementById(`print-q${q}-v${valueSelected}`);
+                    if (printCell) {
+                        printCell.innerText = '✓';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
