@@ -570,7 +570,7 @@
         <!-- Portal Header -->
         <header class="portal-header">
             <div style="text-align: left; margin-bottom: 20px;">
-                <a href="./index.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid #ccc; background: white; color: #333; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer;">
+                <a href="./" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 16px; font-size: 13.5px; border-radius: 8px; border: 1px solid #ccc; background: white; color: #333; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer;">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
                     กลับหน้าพอร์ทัลหลัก
                 </a>
@@ -1134,6 +1134,7 @@
 
                 // Gather payload
                 const payload = {
+                    apiKey: 'BioSyn-Secure-Key-2026',
                     formType: 'evaluation',
                     evaluationId: 'EVL-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                     companyName: document.getElementById('companyName').value,

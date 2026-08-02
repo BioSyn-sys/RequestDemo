@@ -370,7 +370,7 @@
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right: 5px;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
                     ล็อกหน้าจอ
                 </button>
-                <a href="./index.html" class="btn-back">
+                <a href="./" class="btn-back">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
                     ย้อนกลับพอร์ทัลหลัก
                 </a>
@@ -540,7 +540,7 @@
         async function fetchData() {
             try {
                 if (GAS_WEB_APP_URL && GAS_WEB_APP_URL !== "YOUR_GAS_WEB_APP_URL_HERE") {
-                    const res = await fetch(GAS_WEB_APP_URL);
+                    const res = await fetch(GAS_WEB_APP_URL + "?apiKey=BioSyn-Secure-Key-2026");
                     const data = await res.json();
                     if (data && data.status === 'success') {
                         requestsList = data.requests || [];

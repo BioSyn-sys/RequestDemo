@@ -3,6 +3,7 @@
  * 
  * ระบบหลังบ้านรวม (Google Apps Script) สำหรับบันทึกข้อมูลแบบฟอร์มเครื่องมือแพทย์ทั้ง 3 ฟอร์ม
  * พร้อมการอัปโหลดไฟล์ และระบบแจ้งเตือนผ่าน Email และ Telegram Bot
+ * ปลอดภัยสูง: ปกป้องการส่งและดึงข้อมูลด้วยระบบตรวจสอบคีย์ลับ (API Key Check)
  */
 
 // ==========================================
@@ -10,6 +11,9 @@
 // ==========================================
 const MAIN_FOLDER_ID = "1XSwGTD3SjK5WP0lURXA4F_8bE6ybeaTw"; // โฟลเดอร์หลัก Google Drive สำหรับเก็บเอกสารทั้งหมด
 const ADMIN_EMAIL = "your_email@domain.com";             // เปลี่ยนเป็นอีเมลของแอดมินหรือหน่วยงานวิศวกรรมการแพทย์ (BME)
+
+// คีย์ลับป้องกันระบบหลังบ้าน (ห้ามให้ผู้อื่นทราบ)
+const API_KEY = "BioSyn-Secure-Key-2026"; // ⚠️ คีย์ความปลอดภัย ป้องกันการเจาะเข้าระบบหลังบ้านโดยไม่ได้รับอนุญาต
 
 // ตั้งค่า Telegram Bot
 const TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN_HERE"; // เปลี่ยนเป็น Token ของ Telegram Bot ของคุณ
@@ -42,11 +46,92 @@ function sendTelegramNotification(text) {
 }
 
 // ==========================================
+// ฟังก์ชันหลักรับข้อมูล GET Request (ดึงข้อมูลสำหรับ Dashboard)
+// ==========================================
+function doGet(e) {
+  try {
+    const apiKey = e.parameter.apiKey;
+    
+    // ตรวจสอบความถูกต้องของ API Key ในคำขอ GET
+    if (!apiKey || apiKey !== API_KEY) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: 'ปฏิเสธการเชื่อมต่อ: ไม่มีสิทธิ์การเข้าถึงข้อมูลระบบ (Unauthorized Access)'
+      })).setMimeType(ContentService.MimeType.JSON)
+        .setHeader('Access-Control-Allow-Origin', '*');
+    }
+    
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // ดึงข้อมูลในรูปแบบ JSON Array จากแต่ละแผ่นงาน
+    const requestsData = getSheetDataAsJson(spreadsheet, 'requests_db');
+    const evaluationsData = getSheetDataAsJson(spreadsheet, 'evaluations_db');
+    const pacsData = getSheetDataAsJson(spreadsheet, 'pacs_disclosures_db');
+    const uploadsData = getSheetDataAsJson(spreadsheet, 'additional_uploads_db');
+    
+    const result = {
+      status: 'success',
+      timestamp: new Date().toISOString(),
+      requests: requestsData,
+      evaluations: evaluationsData,
+      pacs: pacsData,
+      additional_uploads: uploadsData
+    };
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*');
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*');
+  }
+}
+
+// ฟังก์ชันดึงข้อมูลจากแต่ละชีตแปลงเป็น JSON Array
+function getSheetDataAsJson(spreadsheet, sheetName) {
+  const sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) return [];
+  
+  const range = sheet.getDataRange();
+  const values = range.getValues();
+  if (values.length <= 1) return [];
+  
+  const headers = values[0];
+  const jsonArray = [];
+  
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const obj = {};
+    for (let j = 0; j < headers.length; j++) {
+      let val = row[j];
+      if (val instanceof Date) {
+        val = Utilities.formatDate(val, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+      }
+      obj[headers[j]] = val;
+    }
+    jsonArray.push(obj);
+  }
+  return jsonArray;
+}
+
+// ==========================================
 // ฟังก์ชันหลักรับข้อมูล POST Request
 // ==========================================
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
+    
+    // ตรวจสอบความถูกต้องของ API Key ในการยื่นส่งแบบฟอร์ม POST
+    if (!data.apiKey || data.apiKey !== API_KEY) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: 'ปฏิเสธการเชื่อมต่อ: สิทธิ์เข้าใช้งานไม่ถูกต้อง (Unauthorized Request)'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
     const formType = data.formType; // 'request', 'evaluation', 'pacs' หรือ 'additional_upload'
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     
@@ -107,7 +192,7 @@ function handleRequestForm(data, spreadsheet) {
   const uploadedFileNames = [];
   
   for (let i = 1; i <= 9; i++) {
-    const fileData = data[`file${i}`]; // ส่งมาเป็น object { name: '..', type: '..', base64: '..' }
+    const fileData = data[`file${i}`];
     if (fileData && fileData.base64 && projectFolder) {
       try {
         const decodedBytes = Utilities.base64Decode(fileData.base64.split(',')[1]);
