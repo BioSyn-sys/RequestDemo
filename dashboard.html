@@ -359,6 +359,9 @@
 
     <div class="container">
         
+        <!-- Error Banner -->
+        <div id="errorBanner" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 14px; font-weight: 600; text-align: center; box-shadow: var(--shadow-sm);"></div>
+        
         <!-- Header -->
         <header>
             <div class="logo-area">
@@ -514,18 +517,10 @@
         let evaluationsList = [];
         let departments = new Set();
 
-        // 1. จำลองข้อมูลสำรองกรณีรัน Local และไม่ได้กรอกหรือยังไม่มีค่าเชื่อมต่อ
+        // 1. ข้อมูลเริ่มต้น (กำหนดเป็นค่าว่างเพื่อบังคับแสดงข้อมูลจริงจาก Google Sheets เท่านั้น)
         const mockData = {
-            requests: [
-                { SubmissionID: "REQ-1785678905", CompanyName: "บริษัท ทีจีทีแอล จี เมดิคัล ซิสเต็มส์ จำกัด", DeviceName: "เครื่องระบบตรวจกระจายภาพและวินิจฉัย (PACS Server)", UserDepartment: "กลุ่มงานรังสีวิทยา", DurationDays: 30, StartDate: "2026-08-01", EndDate: "2026-08-31", StaffInCharge: "นพ.ชาญวิทย์", Doc1_URL: "https://drive.google.com" },
-                { SubmissionID: "REQ-1785678221", CompanyName: "บริษัท เมดิเทค เอนจิเนียริ่ง จำกัด", DeviceName: "เครื่องตรวจวัดคลื่นไฟฟ้าหัวใจ (EKG 12-Leads)", UserDepartment: "กลุ่มงานอายุรกรรม", DurationDays: 15, StartDate: "2026-08-05", EndDate: "2026-08-20", StaffInCharge: "พญ.วิจิตรา", Doc1_URL: "https://drive.google.com" },
-                { SubmissionID: "REQ-1785678334", CompanyName: "ห้างหุ้นส่วนจำกัด ล้านนาเครื่องมือแพทย์", DeviceName: "เครื่องควบคุมการให้สารน้ำ (Infusion Pump)", UserDepartment: "กลุ่มงานกุมารเวชกรรม", DurationDays: 45, StartDate: "2026-08-10", EndDate: "2026-09-24", StaffInCharge: "นพ.สมชาย", Doc1_URL: "https://drive.google.com" },
-                { SubmissionID: "REQ-1785678550", CompanyName: "บริษัท ฟิลิปส์ เมดิคัล เฮลท์แคร์ จำกัด", DeviceName: "เครื่องเฝ้าติดตามสัญญาณชีพและออกซิเจนในเลือด", UserDepartment: "หอผู้ป่วยวิกฤต (ICU)", DurationDays: 30, StartDate: "2026-08-12", EndDate: "2026-09-11", StaffInCharge: "นพ.สิทธิ์", Doc1_URL: "https://drive.google.com" }
-            ],
-            evaluations: [
-                { EvaluationID: "EVL-01", CompanyName: "บริษัท ทีจีทีแอล จี เมดิคัล ซิสเต็มส์ จำกัด", DeviceName: "PACS Server", Score_Q1: 5, Score_Q2: 4, Score_Q3: 5, Score_Q4: 4, Score_Q5: 5, Score_Q6: 4, Score_Q7: 5 },
-                { EvaluationID: "EVL-02", CompanyName: "บริษัท เมดิเทค เอนจิเนียริ่ง จำกัด", DeviceName: "EKG 12-Leads", Score_Q1: 4, Score_Q2: 4, Score_Q3: 3, Score_Q4: 4, Score_Q5: 4, Score_Q6: 3, Score_Q7: 4 }
-            ]
+            requests: [],
+            evaluations: []
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -545,18 +540,20 @@
                     if (data && data.status === 'success') {
                         requestsList = data.requests || [];
                         evaluationsList = data.evaluations || [];
+                        document.getElementById('errorBanner').style.display = 'none'; // ซ่อนแบนเนอร์หากสำเร็จ
                     } else {
-                        throw new Error('โครงสร้างส่งกลับล้มเหลว');
+                        throw new Error(data.message || 'โครงสร้างการตอบกลับจาก API ของ Google Sheets ไม่ถูกต้อง');
                     }
                 } else {
-                    console.warn("GAS_WEB_APP_URL is template. Using mock data.");
-                    requestsList = mockData.requests;
-                    evaluationsList = mockData.evaluations;
+                    throw new Error('ยังไม่ได้ระบุลิงก์หลังบ้าน Google Web App URL ในโค้ด');
                 }
             } catch (err) {
-                console.error("เชื่อมต่อข้อมูลล้มเหลว ใช้ข้อมูลจำลองสำหรับออกแบบ:", err);
-                requestsList = mockData.requests;
-                evaluationsList = mockData.evaluations;
+                console.error("เชื่อมต่อข้อมูลล้มเหลว:", err);
+                const errorBanner = document.getElementById('errorBanner');
+                errorBanner.innerHTML = `⚠️ <strong>เชื่อมต่อข้อมูลจริงไม่สำเร็จ:</strong> ${err.message}<br><span style="font-size: 11px; font-weight: normal; margin-top: 4px; display: block;">โปรดตรวจสอบว่าได้นำโค้ด Apps Script ชุดล่าสุดไปวางและ Deploy เป็น "New Version" แล้วเรียบร้อย หรือแผ่นงาน Google Sheets ได้เปิดสิทธิ์สาธารณะอย่างถูกต้อง</span>`;
+                errorBanner.style.display = 'block';
+                requestsList = [];
+                evaluationsList = [];
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 renderDashboard();
