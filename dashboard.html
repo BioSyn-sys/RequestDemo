@@ -336,18 +336,45 @@
 </head>
 <body>
 
+    <!-- Unlock Screen Modal (Overlay) -->
+    <div id="lockScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px;">
+        <div style="background: white; border-radius: var(--radius-lg); padding: 40px 30px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); text-align: center; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="background: rgba(13, 148, 136, 0.1); color: var(--primary); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">ยืนยันสิทธิ์เข้าถึงแดชบอร์ด</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">หน้าวิเคราะห์ข้อมูล Google Sheets นี้ ถูกจำกัดไว้เฉพาะคุณเท่านั้น กรุณาระบุรหัสผ่านเพื่อเข้าใช้งาน</p>
+            
+            <form id="unlockForm" onsubmit="attemptUnlock(event)">
+                <div style="margin-bottom: 20px;">
+                    <input type="password" id="passkey" placeholder="กรอกรหัสผ่าน" required style="width: 100%; padding: 12px 15px; border-radius: var(--radius-sm); border: 1px solid rgba(0, 0, 0, 0.15); font-size: 14px; text-align: center; letter-spacing: 2px; outline: none; transition: 0.2s;">
+                    <div id="unlockError" style="color: #ef4444; font-size: 12.5px; margin-top: 8px; display: none;">❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
+                </div>
+                <button type="submit" style="width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;">
+                    ตรวจสอบรหัสผ่าน
+                </button>
+            </form>
+        </div>
+    </div>
+
     <div class="container">
         
         <!-- Header -->
         <header>
             <div class="logo-area">
-                <h1>📈 แดชบอร์ดติดตามวิเคราะห์<span>การทดลองใช้เครื่องมือแพทย์</span></h1>
-                <p>กลุ่มงานเทคโนโลยีและวิศวกรรมการแพทย์ โรงพยาบาลนครพิงค์ เชียงใหม่</p>
+                <h1>🔒 Google Sheets <span>(Private View - เฉพาะคุณเท่านั้นที่ดูได้)</span></h1>
+                <p>ระบบแดชบอร์ดติดตามและวิเคราะห์เครื่องมือแพทย์ทดลองใช้</p>
             </div>
-            <a href="./index.html" class="btn-back">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
-                ย้อนกลับพอร์ทัลหลัก
-            </a>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="lockDashboard()" class="btn-back" style="border-color: #ef4444; color: #ef4444; cursor: pointer;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right: 5px;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    ล็อกหน้าจอ
+                </button>
+                <a href="./index.html" class="btn-back">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="transform: scaleX(-1);"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42 5.43 5.43H5v2z"/></svg>
+                    ย้อนกลับพอร์ทัลหลัก
+                </a>
+            </div>
         </header>
 
         <!-- KPI Metrics -->
@@ -449,6 +476,36 @@
     </div>
 
     <script>
+        // Configurable private access key (รหัสสำหรับเข้าดูแดชบอร์ด)
+        const ACCESS_KEY = "admin123"; // ⚠️ คุณสามารถแก้ไขรหัสผ่านเข้าดูหน้าจอนี้ได้ที่นี่
+
+        // Check lock status
+        if (localStorage.getItem('dashboard_authorized') === 'true') {
+            document.getElementById('lockScreen').style.display = 'none';
+        }
+
+        function attemptUnlock(e) {
+            e.preventDefault();
+            const input = document.getElementById('passkey').value;
+            const errorDiv = document.getElementById('unlockError');
+            
+            if (input === ACCESS_KEY) {
+                localStorage.setItem('dashboard_authorized', 'true');
+                document.getElementById('lockScreen').style.display = 'none';
+                errorDiv.style.display = 'none';
+                fetchData(); // Load data on successful unlock
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('passkey').value = '';
+                document.getElementById('passkey').focus();
+            }
+        }
+
+        function lockDashboard() {
+            localStorage.removeItem('dashboard_authorized');
+            window.location.reload();
+        }
+
         // ใส่ URL ของ Google Web App ที่รันจาก Apps Script (ระบบผูกลิงก์ของโรงพยาบาลอัตโนมัติแล้ว)
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8a9yS_EfM47G_vmVn-KHuvlpmyUkVGeNp3COyjg1S3kcCbR_X_4BmPyZdYBxodwBt/exec";
 
