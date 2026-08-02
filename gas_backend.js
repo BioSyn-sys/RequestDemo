@@ -2,8 +2,7 @@
  * Google Apps Script Web App Backend for Medical Device Trial Forms
  * 
  * ระบบหลังบ้านรวม (Google Apps Script) สำหรับบันทึกข้อมูลแบบฟอร์มเครื่องมือแพทย์ทั้ง 3 ฟอร์ม
- * และฟังก์ชันอัปโหลดเอกสารเพิ่มเติมรายโครงการหลังการส่งข้อมูลเสร็จสิ้น
- * บันทึกลง Google Sheets และจัดเก็บไฟล์ประกอบลงใน Google Drive แยกรายโครงการ
+ * พร้อมการอัปโหลดไฟล์ และระบบแจ้งเตือนผ่าน Email และ Telegram Bot
  */
 
 // ==========================================
@@ -11,6 +10,36 @@
 // ==========================================
 const MAIN_FOLDER_ID = "1XSwGTD3SjK5WP0lURXA4F_8bE6ybeaTw"; // โฟลเดอร์หลัก Google Drive สำหรับเก็บเอกสารทั้งหมด
 const ADMIN_EMAIL = "your_email@domain.com";             // เปลี่ยนเป็นอีเมลของแอดมินหรือหน่วยงานวิศวกรรมการแพทย์ (BME)
+
+// ตั้งค่า Telegram Bot
+const TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN_HERE"; // เปลี่ยนเป็น Token ของ Telegram Bot ของคุณ
+const TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID_HERE";     // เปลี่ยนเป็น Chat ID หรือ Group ID ที่ต้องการรับการแจ้งเตือน
+
+// ==========================================
+// ฟังก์ชันส่งแจ้งเตือนผ่าน Telegram Bot
+// ==========================================
+function sendTelegramNotification(text) {
+  if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "YOUR_TELEGRAM_BOT_TOKEN_HERE" || !TELEGRAM_CHAT_ID) {
+    Logger.log("ไม่ได้ตั้งค่า Telegram Credentials หรือใช้ค่าเริ่มต้น");
+    return;
+  }
+  const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
+  const payload = {
+    "chat_id": TELEGRAM_CHAT_ID,
+    "text": text
+  };
+  const options = {
+    "method": "post",
+    "contentType": "application/json",
+    "payload": JSON.stringify(payload),
+    "muteHttpExceptions": true
+  };
+  try {
+    UrlFetchApp.fetch(url, options);
+  } catch (err) {
+    Logger.log("ไม่สามารถส่งข้อความไปที่ Telegram ได้: " + err.toString());
+  }
+}
 
 // ==========================================
 // ฟังก์ชันหลักรับข้อมูล POST Request
@@ -62,7 +91,7 @@ function handleRequestForm(data, spreadsheet) {
   
   // 1.1 สร้างโฟลเดอร์เก็บข้อมูลรายโครงการ [ID] [CompanyName] [วัน เดือน ปี เวลา]
   let projectFolder = null;
-  if (MAIN_FOLDER_ID && MAIN_FOLDER_ID !== "YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE") {
+  if (MAIN_FOLDER_ID) {
     try {
       const mainFolder = DriveApp.getFolderById(MAIN_FOLDER_ID);
       const formattedDate = getThaiFormattedDateTime();
@@ -146,12 +175,15 @@ function handleRequestForm(data, spreadsheet) {
       MailApp.sendEmail({
         to: ADMIN_EMAIL,
         subject: `[คำขอใหม่] ขออนุญาตนำเครื่องมือแพทย์ทดลองใช้ - ${data.companyName} (${data.submissionId})`,
-        body: summaryText + `\n\nสามารถตรวจสอบรายการใน Google Sheet และลิงก์ชีตหลักเพื่อดูเอกสารขออนุญาตฉบับจริง`
+        body: summaryText + `\n\nสามารถตรวจสอบรายการใน Google Sheet`
       });
     } catch (eError) {
       Logger.log("ไม่สามารถส่งอีเมลได้: " + eError.toString());
     }
   }
+
+  // 1.6 ส่งแจ้งเตือนทาง Telegram
+  sendTelegramNotification(summaryText);
 
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
@@ -192,24 +224,31 @@ function handleEvaluationForm(data, spreadsheet) {
     data.suggestions
   ]);
 
-  // ส่งแจ้งเตือนทางอีเมลแอดมินสั้นๆ
+  const avgScore = ((data.score_q1 + data.score_q2 + data.score_q3 + data.score_q4 + data.score_q5 + data.score_q6 + data.score_q7) / 7).toFixed(2);
+  const evalMsg = `📊 ผลประเมินเครื่องมือแพทย์ใหม่\n` +
+                  `-----------------------------------------\n` +
+                  `• เครื่องมือ: ${data.deviceName} (ยี่ห้อ/รุ่น: ${data.deviceBrand} / ${data.deviceModel})\n` +
+                  `• แผนกประเมิน: ${data.userDepartment}\n` +
+                  `• ผู้ประเมินหลัก: ${data.staffInCharge}\n` +
+                  `• คะแนนเฉลี่ยความพึงพอใจ: ${avgScore} / 5.00 คะแนน\n` +
+                  `• ข้อเสนอแนะเพิ่มเติม: ${data.suggestions || 'ไม่มี'}\n` +
+                  `-----------------------------------------`;
+
+  // 2.1 ส่งแจ้งเตือนทางอีเมลแอดมิน
   if (ADMIN_EMAIL && ADMIN_EMAIL !== "your_email@domain.com") {
     try {
-      const avgScore = ((data.score_q1 + data.score_q2 + data.score_q3 + data.score_q4 + data.score_q5 + data.score_q6 + data.score_q7) / 7).toFixed(2);
       MailApp.sendEmail({
         to: ADMIN_EMAIL,
         subject: `[ผลประเมินใหม่] แบบประเมินเครื่องมือแพทย์ - ${data.deviceName}`,
-        body: `เจ้าหน้าที่ได้กรอกแบบประเมินสัมฤทธิ์แล้วเรียบร้อย:\n\n` +
-             `เครื่องมือแพทย์: ${data.deviceName} (ยี่ห้อ/รุ่น: ${data.deviceBrand} / ${data.deviceModel})\n` +
-             `แผนกประเมิน: ${data.userDepartment}\n` +
-             `ผู้ประเมินหลัก: ${data.staffInCharge}\n` +
-             `คะแนนเฉลี่ยความพึงพอใจ: ${avgScore} / 5.00 คะแนน\n\n` +
-             `ข้อเสนอแนะเพิ่มเติม: ${data.suggestions || 'ไม่มี'}`
+        body: evalMsg
       });
     } catch (eError) {
       Logger.log("ไม่สามารถส่งอีเมลประเมินได้: " + eError.toString());
     }
   }
+
+  // 2.2 ส่งแจ้งเตือนทาง Telegram
+  sendTelegramNotification(evalMsg);
 
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
@@ -240,6 +279,18 @@ function handlePacsForm(data, spreadsheet) {
     data.opt6Text || ""
   ]);
 
+  const pacsMsg = `🩺 คำขอเชื่อมต่อระบบ PACS ใหม่\n` +
+                  `-----------------------------------------\n` +
+                  `• รหัสอ้างอิง: ${data.pacsId}\n` +
+                  `• วันที่แจ้งขอ: ${data.requestDate}\n` +
+                  `• ถึง: ${data.dearClient}\n` +
+                  `• เรื่อง: ${data.subjectTarget}\n` +
+                  `• รายละเอียดเพิ่มเติม: ${data.additionalNotes || 'ไม่มี'}\n` +
+                  `-----------------------------------------`;
+
+  // 3.1 ส่งแจ้งเตือนทาง Telegram
+  sendTelegramNotification(pacsMsg);
+
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
     message: 'บันทึกหนังสือขอสิทธิ์เชื่อม PACS สำเร็จ'
@@ -269,7 +320,6 @@ function handleAdditionalUpload(data, spreadsheet) {
         }
       }
       
-      // หากไม่พบโฟลเดอร์เดิม ให้สร้างโฟลเดอร์เสริมใหม่สำหรับข้อมูลเพิ่มเติม
       if (!targetFolder) {
         targetFolder = mainFolder.createFolder(`${searchId} Additional_Upload (${formattedDate})`);
       }
@@ -315,23 +365,29 @@ function handleAdditionalUpload(data, spreadsheet) {
     fileUrls.file3_url || ""
   ]);
 
+  const uploadMsg = `📤 เอกสารเพิ่มเติมใหม่\n` +
+                    `-----------------------------------------\n` +
+                    `• รหัสคำขอเดิม: ${searchId}\n` +
+                    `• บันทึกย่อ: ${data.note || '-'}\n` +
+                    `• วันที่ดำเนินการ: ${formattedDate}\n` +
+                    `• ไฟล์ที่แนบเสริม: ${uploadedFileNames.join(', ') || 'ไม่มี'}\n` +
+                    `-----------------------------------------`;
+
   // 4.4 ส่งแจ้งเตือนแอดมินทางอีเมล
   if (ADMIN_EMAIL && ADMIN_EMAIL !== "your_email@domain.com") {
     try {
       MailApp.sendEmail({
         to: ADMIN_EMAIL,
         subject: `[เอกสารเพิ่มเติม] รหัสโครงการ ${searchId} มีการอัปโหลดไฟล์เพิ่มเข้ามา`,
-        body: `แจ้งเตือนการยื่นไฟล์เอกสารเพิ่มเติมหลังยื่นคำขอ:\n\n` +
-             `• รหัสคำขอเดิม: ${searchId}\n` +
-             `• บันทึกเสริม: ${data.note || '-'}\n` +
-             `• วันที่ดำเนินการ: ${formattedDate}\n` +
-             `• ไฟล์ที่อัปโหลดเพิ่ม: ${uploadedFileNames.join(', ') || 'ไม่มี'}\n` +
-             `• สามารถเปิดดูไฟล์เพิ่มเติมได้ที่โฟลเดอร์ของโครงการหลักโดยตรง`
+        body: uploadMsg
       });
     } catch (eError) {
       Logger.log("ไม่สามารถส่งอีเมลเพิ่มเติมได้: " + eError.toString());
     }
   }
+
+  // 4.5 ส่งแจ้งเตือนทาง Telegram
+  sendTelegramNotification(uploadMsg);
 
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
